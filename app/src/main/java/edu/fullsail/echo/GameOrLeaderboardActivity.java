@@ -1,3 +1,10 @@
+/*
+David Clark
+CE03 - Android Wear
+MDV359-O
+C20200101
+*/
+
 package edu.fullsail.echo;
 
 import android.os.Bundle;
