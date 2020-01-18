@@ -4,8 +4,13 @@
     <string name="app_name">Echo</string>
     <string name="echo_logo">Echo Logo</string>
     <string name="title_activity_game_or_leaderboard">GameOrLeaderboardActivity</string>
-    <string name="icon_start_game">Start Game Icon</string>
+    <string name="icon_start_new_game">Start New Game Icon</string>
     <string name="icon_view_leaderboard">View Leaderboard Icon</string>
     <string name="view_leaderboard">View the Leaderboard</string>
     <string name="start_new_game">Start a New Game</string>
+    <string name="title_activity_google_or_guest">GoogleOrGuestActivity</string>
+    <string name="icon_use_guest_account">Use Guest Account Icon</string>
+    <string name="icon_use_google_account">Use Google Account Icon</string>
+    <string name="use_google_account">Use Google Account</string>
+    <string name="continue_as_guest">Continue as Guest</string>
 </resources>

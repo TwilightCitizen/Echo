@@ -25,8 +25,11 @@
             android:value="true" />
 
         <activity
+            android:name=".GoogleOrGuestActivity"
+            android:label="@string/title_activity_google_or_guest"></activity>
+        <activity
             android:name=".GameOrLeaderboardActivity"
-            android:label="@string/title_activity_game_or_leaderboard"></activity>
+            android:label="@string/title_activity_game_or_leaderboard" />
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name">
