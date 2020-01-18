@@ -11,21 +11,63 @@
     android:orientation="vertical"
     tools:context=".GameOrLeaderboardActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/layoutGame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/red_dark">
 
-    </FrameLayout>
+        <Button
+            android:id="@+id/buttonStartGame"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_start_game"
+            android:contentDescription="@string/icon_start_game" />
 
-    <FrameLayout
+        <TextView
+            android:id="@+id/textStartGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/start_new_game"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutLeaderboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/green_dark">
 
-    </FrameLayout>
+        <ImageButton
+            android:id="@+id/buttonViewLeaderboard"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_view_leaderboard"
+            android:contentDescription="@string/icon_view_leaderboard" />
+
+        <TextView
+            android:id="@+id/textViewLeaderboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/view_leaderboard"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
 </LinearLayout>

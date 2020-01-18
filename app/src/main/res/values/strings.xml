@@ -4,9 +4,8 @@
     <string name="app_name">Echo</string>
     <string name="echo_logo">Echo Logo</string>
     <string name="title_activity_game_or_leaderboard">GameOrLeaderboardActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
+    <string name="icon_start_game">Start Game Icon</string>
+    <string name="icon_view_leaderboard">View Leaderboard Icon</string>
+    <string name="view_leaderboard">View the Leaderboard</string>
+    <string name="start_new_game">Start a New Game</string>
 </resources>
