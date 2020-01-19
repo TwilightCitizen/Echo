@@ -25,20 +25,30 @@
             android:value="true" />
 
         <activity
+            android:name=".EchoGameActivity"
+            android:label="@string/title_activity_echo_game"></activity>
+
+        <activity
             android:name=".GoogleOrGuestActivity"
-            android:label="@string/title_activity_google_or_guest"></activity>
+            android:label="@string/title_activity_google_or_guest" />
+
         <activity
             android:name=".GameOrLeaderboardActivity"
             android:label="@string/title_activity_game_or_leaderboard" />
+
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name="android.support.wearable.activity.ConfirmationActivity">
+        </activity>
+    </application>
 </manifest>

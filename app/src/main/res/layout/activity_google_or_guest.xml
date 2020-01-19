@@ -45,7 +45,7 @@
         android:layout_weight="1"
         android:background="@color/blue_dark">
 
-        <ImageButton
+        <Button
             android:id="@+id/buttonUseGuestAccount"
             android:layout_width="48dp"
             android:layout_height="48dp"

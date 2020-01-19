@@ -13,4 +13,7 @@
     <string name="icon_use_google_account">Use Google Account Icon</string>
     <string name="use_google_account">Use Google Account</string>
     <string name="continue_as_guest">Continue as Guest</string>
+    <string name="title_activity_echo_game">EchoGameActivity</string>
+    <string name="successful_google_sign_in">Successfully Signed into Google</string>
+    <string name="failed_google_sign_in">Failed to Sign into Google</string>
 </resources>

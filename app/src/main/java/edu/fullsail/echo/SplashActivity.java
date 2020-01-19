@@ -19,17 +19,22 @@ public class SplashActivity extends WearableActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_splash );
         setAmbientEnabled();
+        transitionSplash();
+    }
 
-        Runnable   transitionSplash  = () -> {
-            startActivity( new Intent( this, GameOrLeaderboardActivity.class ) );
+    private void transitionSplash() {
+        Intent     gameOrLeaderBoardIntent = new Intent( this, GameOrLeaderboardActivity.class );
+
+        Runnable   transitionSplash        = () -> {
+            startActivity( gameOrLeaderBoardIntent );
             overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
             finish();
         };
 
-        Handler    transitionHandler = new Handler();
+        Handler    transitionHandler       = new Handler();
 
-        final int  delaySeconds      = getResources().getInteger( R.integer.splash_delay_seconds );
-        final long delayMillis       = TimeUnit.SECONDS.toMillis( delaySeconds );
+        final int  delaySeconds            = getResources().getInteger( R.integer.splash_delay_seconds );
+        final long delayMillis             = TimeUnit.SECONDS.toMillis( delaySeconds );
 
         transitionHandler.postDelayed( transitionSplash, delayMillis );
     }
