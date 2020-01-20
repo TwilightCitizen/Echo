@@ -11,6 +11,8 @@ import android.content.Context;
 import android.os.Handler;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +33,8 @@ public class EchoGame {
         void stopFlashBlueButton();
         void startFlashYellowButton();
         void stopFlashYellowButton();
+        void startFlashBadButton();
+        void stopFlashBadButton();
     }
 
     // States that Echo Game can be in.
@@ -50,21 +54,21 @@ public class EchoGame {
     }
 
     // Delegate/Listener the Echo Game requires.
-    private EchoGameListener         echoGameListener;
+    private EchoGameListener     echoGameListener;
 
     // Context for obtaining resources.  Echo game listener could be anything...
-    private Context                  context;
+    private Context              context;
 
     // State of Echo Game.
-    private EchoState                echoState        = EchoState.presenting;
+    private EchoState            echoState        = EchoState.presenting;
 
     // Sequence of buttons that Echo will present.
-    private ArrayList< ButtonColor > buttonSequence   = new ArrayList<>();
+    private Queue< ButtonColor > buttonSequence   = new LinkedList<>();
     // private int                      buttonIndex      = 0;
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private boolean                  flashButtons     = true,
-                                     playSounds       = true;
+    private boolean              flashButtons     = true,
+                                 playSounds       = true;
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
@@ -79,44 +83,61 @@ public class EchoGame {
         this.playSounds       = playSounds;
     }
 
-    private void presentButtonSequence() {
-        for( ButtonColor buttonColor : buttonSequence ) {
-            // Runnables for which button to start and stop flashing.
-            Runnable startFlashButton, stopFlashButton;
+    private void presentButtonSequence( Queue< ButtonColor > sequence ) {
+        // Get the indexed button color.
+        ButtonColor buttonColor = sequence.remove();
 
-            // Handler to manage the start and stop of flashing buttons.
-            Handler flashHandler = new Handler();
+        // Runnables for which button to start and stop flashing.
+        final Runnable startFlashButton, stopFlashButton;
 
-            // Delays between button flashes and between starting and stopping a button flash.
-            final int  delaySecondsFlash = context.getResources().getInteger( R.integer.flash_length_seconds );
-            final long delayMillisFlash  = TimeUnit.SECONDS.toMillis( delaySecondsFlash );
-            final long delayMillisGap    = context.getResources().getInteger( R.integer.flash_gap_milliseconds );
+        // Handler to manage the start and stop of flashing buttons.
+        Handler flashHandler = new Handler();
 
-            // Set runnables to start and stop flashing based on color of button in sequence.
-            switch( buttonColor ) {
-                case red :
-                    startFlashButton = () -> echoGameListener.startFlashRedButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashRedButton();
-                    break;
-                case green :
-                    startFlashButton = () -> echoGameListener.startFlashGreenButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashGreenButton();
-                    break;
-                case blue :
-                    startFlashButton = () -> echoGameListener.startFlashBlueButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashBlueButton();
-                case yellow :
-                default :
-                    startFlashButton = () -> echoGameListener.startFlashYellowButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashYellowButton();
-            }
+        // Delays between button flashes and between starting and stopping a button flash.
+        final long delayMillisFlash  = context.getResources().getInteger( R.integer.flash_length_milliseconds );
+        final long delayMillisGap    = context.getResources().getInteger( R.integer.flash_gap_milliseconds );
 
-            // Start flashing the button after barely perceptible delay.  This delay prevents
-            // consecutive flashes of the same button from blending together from the user's view.
-            // Then stop after a longer delay so the color being flashed is apparent.
-            flashHandler.postDelayed( startFlashButton, delayMillisGap   );
-            flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
+        // Set runnables to start and stop flashing based on color of button in sequence.
+        switch( buttonColor ) {
+            case red :
+                startFlashButton = () -> echoGameListener.startFlashRedButton();
+                stopFlashButton  = () -> echoGameListener.stopFlashRedButton();
+                break;
+            case green :
+                startFlashButton = () -> echoGameListener.startFlashGreenButton();
+                stopFlashButton  = () -> echoGameListener.stopFlashGreenButton();
+                break;
+            case blue :
+                startFlashButton = () -> echoGameListener.startFlashBlueButton();
+                stopFlashButton  = () -> echoGameListener.stopFlashBlueButton();
+                break;
+            case yellow :
+                startFlashButton = () -> echoGameListener.startFlashYellowButton();
+                stopFlashButton  = () -> echoGameListener.stopFlashYellowButton();
+                break;
+            default :
+                startFlashButton = () -> echoGameListener.startFlashYellowButton();
+                stopFlashButton  = () -> echoGameListener.stopFlashYellowButton();
         }
+
+        /*
+        Start flashing the button after barely perceptible delay.  This delay prevents
+        consecutive flashes of the same button from blending together from the user's view.
+        Then stop after a longer delay so the color being flashed is apparent.  Posts to the handler
+        must be nested, or all gaps and delays will post at pretty much the same time, within
+        nanoseconds, perhaps.
+        */
+        flashHandler.postDelayed( () -> {
+            startFlashButton.run();
+
+            flashHandler.postDelayed( () -> {
+                stopFlashButton.run();
+
+                if( sequence.isEmpty() ) return;
+
+                presentButtonSequence( sequence );
+            }, delayMillisFlash );
+        }, delayMillisGap );
     }
 
     private void addButtonToSequence() {
@@ -125,7 +146,7 @@ public class EchoGame {
 
         // Handler and runnable for presenting the new sequence after a delay.
         Handler    newSequenceHandler   = new Handler();
-        Runnable   presentNewSequence   = this::presentButtonSequence;
+        Runnable   presentNewSequence   = () -> presentButtonSequence( buttonSequence );
 
         // Delay before presenting new sequence after increasing it.
         final int  delaySecondsSequence = context.getResources().getInteger( R.integer.sequence_delay_seconds );
@@ -135,29 +156,44 @@ public class EchoGame {
         newSequenceHandler.postDelayed( presentNewSequence, delayMillisSequence );
     }
 
-    private void startNewGame() {
+    public void startNewGame() {
         buttonSequence.clear();
+
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+        buttonSequence.add( ButtonColor.getRandom() );
+
         addButtonToSequence();
     }
 
     // Process user taps on buttons.
 
-    public void redTapped() {
+    public void redButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void greenTapped() {
+    public void greenButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void blueTapped() {
+    public void blueButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void yellowTapped() {
+    public void yellowButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
