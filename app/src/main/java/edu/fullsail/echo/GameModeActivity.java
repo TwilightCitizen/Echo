@@ -30,18 +30,27 @@ public class GameModeActivity extends WearableActivity {
 
     // Game Mode provides discrete options with Game Mode seek bar positions and text labels.
     public enum GameMode {
-        seeAndHear( 0, R.string.see_hear ),
-        seeOnly(    1, R.string.see_only   ),
-        hearOnly(   2, R.string.hear_only  );
+        seeAndHear( 0, R.string.see_hear, true,  true  ),
+        seeOnly(    1, R.string.see_only,   true,  false ),
+        hearOnly(   2, R.string.hear_only,  false, true  );
 
         // Position of Game Mode seek bar and text label associated with the option.
-        private final int seekBarPosition;
-        private final int gameModeLabel;
+        private final int     seekBarPosition;
+        private final int     gameModeLabel;
+        private final boolean flashButtons;
+        private final boolean playSounds;
 
         // Associate Game Mode seek bar and text label with the option.
-        GameMode( final int seekBarPosition, final int gameModeLabel ) {
+        GameMode(
+            final int seekBarPosition,
+            final int gameModeLabel,
+            final boolean flashButtons,
+            final boolean playSounds
+        ) {
             this.seekBarPosition = seekBarPosition;
             this.gameModeLabel   = gameModeLabel;
+            this.flashButtons    = flashButtons;
+            this.playSounds      = playSounds;
         }
 
         public static GameMode getGameMode( int forSeekBarPosition ) {
@@ -55,6 +64,10 @@ public class GameModeActivity extends WearableActivity {
 
         // Return the Text Label associated with the Game Mode.
         public int getGameModeLabel() { return gameModeLabel; }
+
+        // Return whether or not the Game Mode flashes buttons or plays sounds.
+        public boolean getFlashesButtons() { return flashButtons; }
+        public boolean getPlaysSounds()    { return playSounds;   }
     }
 
     private GameMode            gameMode            = GameMode.seeAndHear;

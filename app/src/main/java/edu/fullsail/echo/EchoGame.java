@@ -124,8 +124,8 @@ public class EchoGame {
         buttonSequence.add( ButtonColor.getRandom() );
 
         // Handler and runnable for presenting the new sequence after a delay.
-        Handler  newSequenceHandler = new Handler();
-        Runnable presentNewSequence = this::presentButtonSequence;
+        Handler    newSequenceHandler   = new Handler();
+        Runnable   presentNewSequence   = this::presentButtonSequence;
 
         // Delay before presenting new sequence after increasing it.
         final int  delaySecondsSequence = context.getResources().getInteger( R.integer.sequence_delay_seconds );
