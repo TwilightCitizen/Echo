@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -28,6 +29,12 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     Button buttonBlue;
     Button buttonYellow;
 
+    // Overlays that fake highlighting a button.
+    ImageView overlayFlashRed;
+    ImageView overlayFlashGreen;
+    ImageView overlayFlashBlue;
+    ImageView overlayFlashYellow;
+
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_echo_game );
@@ -35,6 +42,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         getGoogleSignInAccount();
         getGameMode();
         setupButtons();
+        setupOverlays();
         setupEchoGame();
     }
 
@@ -62,6 +70,13 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         buttonYellow.setOnClickListener( ( View V ) -> echoGame.yellowButtonTapped() );
     }
 
+    private void setupOverlays() {
+        overlayFlashRed    = findViewById( R.id.imageRedFlash    );
+        overlayFlashGreen  = findViewById( R.id.imageGreenFlash  );
+        overlayFlashBlue   = findViewById( R.id.imageBlueFlash   );
+        overlayFlashYellow = findViewById( R.id.imageYellowFlash );
+    }
+
     private void setupEchoGame() {
         // Setup and start a game of Echo.
         echoGame = new EchoGame( this, this, gameMode.getFlashesButtons(), gameMode.getPlaysSounds() );
@@ -69,63 +84,41 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
-    private void subdueAllButtons() {
-        // Subdue all the buttons so whichever one is flashed will stand out more.
-        buttonRed.setBackgroundColor(    getColor( R.color.red_subdue    ) );
-        buttonGreen.setBackgroundColor(  getColor( R.color.green_subdue  ) );
-        buttonBlue.setBackgroundColor(   getColor( R.color.blue_subdue   ) );
-        buttonYellow.setBackgroundColor( getColor( R.color.yellow_subdue ) );
-    }
-
-    private void normalizeAllButtons() {
-        // Return all buttons to their normal shade of color.
-        buttonRed.setBackgroundColor(    getColor( R.color.red_normal    ) );
-        buttonGreen.setBackgroundColor(  getColor( R.color.green_normal  ) );
-        buttonBlue.setBackgroundColor(   getColor( R.color.blue_normal   ) );
-        buttonYellow.setBackgroundColor( getColor( R.color.yellow_normal ) );
-    }
-
     @Override public void startFlashRedButton() {
-        subdueAllButtons();
-        buttonRed.setBackgroundColor( getColor( R.color.red_flash ) );
+        overlayFlashRed.setVisibility( View.VISIBLE );
     }
 
     @Override public void stopFlashRedButton() {
-        normalizeAllButtons();
+        overlayFlashRed.setVisibility( View.GONE );
     }
 
     @Override public void startFlashGreenButton() {
-        subdueAllButtons();
-        buttonGreen.setBackgroundColor( getColor( R.color.green_flash ) );
+        overlayFlashGreen.setVisibility( View.VISIBLE );
     }
 
     @Override public void stopFlashGreenButton() {
-        normalizeAllButtons();
+        overlayFlashGreen.setVisibility( View.GONE );
     }
 
     @Override public void startFlashBlueButton() {
-        subdueAllButtons();
-        buttonBlue.setBackgroundColor( getColor( R.color.blue_flash ) );
+        overlayFlashBlue.setVisibility( View.VISIBLE );
     }
 
     @Override public void stopFlashBlueButton() {
-        normalizeAllButtons();
+        overlayFlashBlue.setVisibility( View.GONE );
     }
 
     @Override public void startFlashYellowButton() {
-        subdueAllButtons();
-        buttonYellow.setBackgroundColor( getColor( R.color.yellow_flash ) );
+        overlayFlashYellow.setVisibility( View.VISIBLE );
     }
 
     @Override public void stopFlashYellowButton() {
-        normalizeAllButtons();
+        overlayFlashYellow.setVisibility( View.GONE );
     }
 
     @Override public void startFlashBadButton() {
-
     }
 
     @Override public void stopFlashBadButton() {
-
     }
 }

@@ -23,4 +23,5 @@
     <string name="see_hear">See &amp; Hear</string>
     <string name="see_only">See Only</string>
     <string name="hear_only">Hear Only</string>
+    <string name="button_overlay">Button Overlay</string>
 </resources>

@@ -64,5 +64,57 @@
         app:layout_constraintStart_toStartOf="@+id/guideV50"
         app:layout_constraintTop_toTopOf="@+id/guideH50" />
 
+    <ImageView
+        android:id="@+id/imageRedFlash"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/button_overlay"
+        android:elevation="4dp"
+        android:src="@drawable/overlay_red_flash"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageGreenFlash"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/button_overlay"
+        android:elevation="4dp"
+        android:src="@drawable/overlay_green_flash"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageBlueFlash"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/button_overlay"
+        android:elevation="4dp"
+        android:src="@drawable/overlay_blue_flash"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageYellowFlash"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/button_overlay"
+        android:elevation="4dp"
+        android:src="@drawable/overlay_yellow_flash"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

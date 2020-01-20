@@ -19,8 +19,8 @@
     <color name="blue_flash">#0000FF</color>
     <color name="yellow_flash">#FFFF00</color>
 
-    <color name="red_subdue">#220000</color>
-    <color name="green_subdue">#002200</color>
-    <color name="blue_subdue">#000022</color>
-    <color name="yellow_subdue">#222200</color>
+    <color name="red_subdue">#330000</color>
+    <color name="green_subdue">#003300</color>
+    <color name="blue_subdue">#000033</color>
+    <color name="yellow_subdue">#333300</color>
 </resources>
