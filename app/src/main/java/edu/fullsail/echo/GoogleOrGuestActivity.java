@@ -9,6 +9,7 @@ package edu.fullsail.echo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import java.util.concurrent.TimeUnit;
 
 public class GoogleOrGuestActivity extends WearableActivity {
     private static final int    REQUEST_GOOGLE_SIGN_IN = 1;
@@ -70,8 +73,17 @@ public class GoogleOrGuestActivity extends WearableActivity {
 
     private void handleGoogleSignInResult( Task< GoogleSignInAccount > googleSignInAccountTask ) {
         try {
-            GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult( ApiException.class );
-            Intent              echoGameIntent      = new Intent( this, EchoGameActivity.class );
+            GoogleSignInAccount googleSignInAccount    = googleSignInAccountTask.getResult( ApiException.class );
+            Intent              echoGameIntent         = new Intent( this, EchoGameActivity.class );
+
+            Runnable            transitionNotification = () -> {
+                startActivity( echoGameIntent );
+                overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            };
+
+            Handler             transitionHandler      = new Handler();
+            final int           delaySeconds           = getResources().getInteger( R.integer.notification_delay_seconds );
+            final long          delayMillis            = TimeUnit.SECONDS.toMillis( delaySeconds );
 
             notifyGoogleSignInSuccess(
                 ConfirmationActivity.SUCCESS_ANIMATION,
@@ -79,8 +91,8 @@ public class GoogleOrGuestActivity extends WearableActivity {
             );
 
             echoGameIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
-            startActivity( echoGameIntent );
-            overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            transitionHandler.postDelayed( transitionNotification, delayMillis );
+
         } catch( ApiException e ) {
             notifyGoogleSignInSuccess(
                 ConfirmationActivity.FAILURE_ANIMATION,

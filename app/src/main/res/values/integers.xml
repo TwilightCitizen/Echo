@@ -2,4 +2,5 @@
 
 <resources>
     <integer name="splash_delay_seconds">2</integer>
+    <integer name="notification_delay_seconds">2</integer>
 </resources>
