@@ -27,7 +27,7 @@ public class GameOrLeaderboardActivity extends WearableActivity {
     }
 
     private void setupButtonViewLeaderboard() {
-        // setupNavigationButton( R.id.buttonViewLeaderboard, LeaderboardActivity.class );
+        setupNavigationButton( R.id.buttonViewLeaderboard, LeaderboardActivity.class );
     }
 
     private< T extends WearableActivity > void setupNavigationButton( int buttonId, Class< T > targetActivity ) {
