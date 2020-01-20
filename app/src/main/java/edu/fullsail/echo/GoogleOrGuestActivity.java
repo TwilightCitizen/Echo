@@ -85,35 +85,20 @@ public class GoogleOrGuestActivity extends WearableActivity {
             final int           delaySeconds           = getResources().getInteger( R.integer.notification_delay_seconds );
             final long          delayMillis            = TimeUnit.SECONDS.toMillis( delaySeconds );
 
-            notifyGoogleSignInSuccess(
-                ConfirmationActivity.SUCCESS_ANIMATION,
-                R.string.successful_google_sign_in
-            );
-
+            notifyGoogleSignInSuccess( ConfirmationActivity.SUCCESS_ANIMATION, R.string.successful_google_sign_in );
             echoGameIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
             transitionHandler.postDelayed( transitionNotification, delayMillis );
 
         } catch( ApiException e ) {
-            notifyGoogleSignInSuccess(
-                ConfirmationActivity.FAILURE_ANIMATION,
-                R.string.failed_google_sign_in
-            );
+            notifyGoogleSignInSuccess( ConfirmationActivity.FAILURE_ANIMATION, R.string.failed_google_sign_in );
         }
     }
 
     private void notifyGoogleSignInSuccess( int successAnimation, int messageId ) {
         Intent googleSignInSuccessIntent = new Intent( this, ConfirmationActivity.class );
 
-        googleSignInSuccessIntent.putExtra(
-            ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-            successAnimation
-        );
-
-        googleSignInSuccessIntent.putExtra(
-            ConfirmationActivity.EXTRA_MESSAGE,
-            getString( messageId )
-        );
-
+        googleSignInSuccessIntent.putExtra( ConfirmationActivity.EXTRA_ANIMATION_TYPE, successAnimation );
+        googleSignInSuccessIntent.putExtra( ConfirmationActivity.EXTRA_MESSAGE, getString( messageId ) );
         startActivity( googleSignInSuccessIntent );
     }
 }
