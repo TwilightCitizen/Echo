@@ -44,7 +44,6 @@ public class GameModeActivity extends WearableActivity {
     }
 
     private GameMode            gameMode            = GameMode.seeAndHear;
-
     private GoogleSignInAccount googleSignInAccount = null;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
