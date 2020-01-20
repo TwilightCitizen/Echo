@@ -29,6 +29,6 @@ public class EchoGameActivity extends WearableActivity {
     }
 
     private void getGameMode() {
-        gameMode = getIntent().getParcelableExtra( GameModeActivity.GAME_MODE );
+        gameMode = GameModeActivity.GameMode.values()[ getIntent().getIntExtra( GameModeActivity.GAME_MODE, 0 ) ];
     }
 }

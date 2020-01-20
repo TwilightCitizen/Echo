@@ -86,9 +86,9 @@ public class GameModeActivity extends WearableActivity {
         Intent echoGameIntent  = new Intent( this, EchoGameActivity.class );
 
         echoGameIntent.putExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
-        echoGameIntent.putExtra( GAME_MODE, gameMode );
 
         startGameButton.setOnClickListener( ( View v ) -> {
+            echoGameIntent.putExtra( GAME_MODE, gameMode.ordinal() );
             startActivity( echoGameIntent );
             overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
         } );
