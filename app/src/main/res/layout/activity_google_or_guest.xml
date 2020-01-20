@@ -26,7 +26,6 @@
             android:contentDescription="@string/icon_use_google_account" />
 
         <TextView
-            android:id="@+id/textStartGame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"

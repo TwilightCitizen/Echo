@@ -28,8 +28,11 @@
             android:value="true" />
 
         <activity
+            android:name=".GameModeActivity"
+            android:label="@string/title_activity_game_mode"></activity>
+        <activity
             android:name=".LeaderboardActivity"
-            android:label="@string/title_activity_leaderboard"></activity>
+            android:label="@string/title_activity_leaderboard" />
         <activity
             android:name=".EchoGameActivity"
             android:label="@string/title_activity_echo_game" />
@@ -48,7 +51,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="android.support.wearable.activity.ConfirmationActivity"></activity>
+        <activity android:name="android.support.wearable.activity.ConfirmationActivity" />
     </application>
 
 </manifest>

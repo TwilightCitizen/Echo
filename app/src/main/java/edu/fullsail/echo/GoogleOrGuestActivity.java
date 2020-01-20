@@ -52,11 +52,10 @@ public class GoogleOrGuestActivity extends WearableActivity {
 
     private void setupButtonUseGuestAccount() {
         Button useGuestAccountButton = findViewById( R.id.buttonUseGuestAccount );
-
-        Intent echoGameIntent = new Intent( this, EchoGameActivity.class );
+        Intent gameModeIntent        = new Intent( this, GameModeActivity.class );
 
         useGuestAccountButton.setOnClickListener( ( View v ) -> {
-            startActivity( echoGameIntent );
+            startActivity( gameModeIntent );
             overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
         } );
     }
@@ -74,10 +73,10 @@ public class GoogleOrGuestActivity extends WearableActivity {
     private void handleGoogleSignInResult( Task< GoogleSignInAccount > googleSignInAccountTask ) {
         try {
             GoogleSignInAccount googleSignInAccount    = googleSignInAccountTask.getResult( ApiException.class );
-            Intent              echoGameIntent         = new Intent( this, EchoGameActivity.class );
+            Intent              gameModeIntent         = new Intent( this, GameModeActivity.class );
 
             Runnable            transitionNotification = () -> {
-                startActivity( echoGameIntent );
+                startActivity( gameModeIntent );
                 overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
             };
 
@@ -86,7 +85,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
             final long          delayMillis            = TimeUnit.SECONDS.toMillis( delaySeconds );
 
             notifyGoogleSignInSuccess( ConfirmationActivity.SUCCESS_ANIMATION, R.string.successful_google_sign_in );
-            echoGameIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
+            gameModeIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
             transitionHandler.postDelayed( transitionNotification, delayMillis );
 
         } catch( ApiException e ) {
