@@ -10,6 +10,11 @@ package edu.fullsail.echo;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 
+/*
+Leaderboard activity will show players' top scores, sorted from highest to lowest score, to be
+obtained by a Firebase database.  Presently, functionality just displays an empty activity so
+navigation could be stubbed out.
+*/
 public class LeaderboardActivity extends WearableActivity {
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );

@@ -25,10 +25,12 @@ public class EchoGameActivity extends WearableActivity {
     }
 
     private void getGoogleSignInAccount() {
+        // Get any authenticated Google Account passed from the calling activity.
         googleSignInAccount = getIntent().getParcelableExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT );
     }
 
     private void getGameMode() {
+        // Get the Game Mode passed from the calling activity.
         gameMode = GameModeActivity.GameMode.values()[ getIntent().getIntExtra( GameModeActivity.GAME_MODE, 0 ) ];
     }
 }
