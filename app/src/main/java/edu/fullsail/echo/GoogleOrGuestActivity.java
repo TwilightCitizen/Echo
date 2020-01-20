@@ -22,7 +22,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 public class GoogleOrGuestActivity extends WearableActivity {
-    public static final int REQUEST_GOOGLE_SIGN_IN = 1;
+    private static final int    REQUEST_GOOGLE_SIGN_IN = 1;
+    public  static final String GOOGLE_SIGN_IN_ACCOUNT = "GOOGLE_SIGN_IN_ACCOUNT";
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -35,15 +36,15 @@ public class GoogleOrGuestActivity extends WearableActivity {
     private void setupButtonUseGoogleAccount() {
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).build();
+        ).requestEmail().build();
 
         GoogleSignInClient  googleSignInClient     = GoogleSignIn.getClient( this, googleSignInOptions );
         Intent              googleSignInIntent     = googleSignInClient.getSignInIntent();
         Button              useGoogleAccountButton = findViewById( R.id.buttonUseGoogleAccount );
 
-        useGoogleAccountButton.setOnClickListener( ( View v ) -> {
-            startActivityForResult( googleSignInIntent, REQUEST_GOOGLE_SIGN_IN );
-        } );
+        useGoogleAccountButton.setOnClickListener( ( View v ) ->
+            startActivityForResult( googleSignInIntent, REQUEST_GOOGLE_SIGN_IN )
+        );
     }
 
     private void setupButtonUseGuestAccount() {
@@ -69,12 +70,17 @@ public class GoogleOrGuestActivity extends WearableActivity {
 
     private void handleGoogleSignInResult( Task< GoogleSignInAccount > googleSignInAccountTask ) {
         try {
-            GoogleSignInAccount googleSignInAccount  = googleSignInAccountTask.getResult( ApiException.class );
+            GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult( ApiException.class );
+            Intent              echoGameIntent      = new Intent( this, EchoGameActivity.class );
 
             notifyGoogleSignInSuccess(
                 ConfirmationActivity.SUCCESS_ANIMATION,
                 R.string.successful_google_sign_in
             );
+
+            echoGameIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
+            startActivity( echoGameIntent );
+            overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
         } catch( ApiException e ) {
             notifyGoogleSignInSuccess(
                 ConfirmationActivity.FAILURE_ANIMATION,
