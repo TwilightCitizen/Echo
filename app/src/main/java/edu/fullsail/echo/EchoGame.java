@@ -12,8 +12,9 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -43,17 +44,11 @@ public class EchoGame {
         void stopFlashGoodButton();
 
         void startPlayRedTune();
-        void stopPlayRedTune();
         void startPlayGreenTune();
-        void stopPlayGreenTune();
         void startPlayBlueTune();
-        void stopPlayBlueTune();
         void startPlayYellowTune();
-        void stopPlayYellowTune();
         void startPlayBadTune();
-        void stopPlayBadTune();
         void startPlayGoodTune();
-        void stopPlayGoodTune();
     }
 
     // States that Echo Game can be in.
@@ -73,26 +68,26 @@ public class EchoGame {
     }
 
     // Delegate/Listener the Echo Game requires.
-    private final EchoGameListener         echoGameListener;
+    private final EchoGameListener    echoGameListener;
 
     // Context for obtaining resources.  Echo game listener could be anything...
-    private final Context                  context;
+    private final Context             context;
 
     // State of Echo Game.
-    private       EchoState                echoState      = EchoState.presenting;
+    private       EchoState           echoState      = EchoState.presenting;
 
     // Sequence of buttons that Echo will present.
-    private final ArrayList< ButtonColor > buttonSequence = new ArrayList<>();
+    private final List< ButtonColor > buttonSequence = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private       boolean                  flashButtons   = true,
-                                           playSounds     = true;
+    private       boolean             flashButtons   = true,
+                                      playSounds     = true;
 
     // Index of button in sequence to compare against the user's tap.
-    private       int                      buttonIndex    = 0;
+    private       int                 buttonIndex    = 0;
 
     // Number of sequence steps the user successfully echoed.
-    private       int                      playerScore    = 0;
+    private       int                 playerScore    = 0;
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
@@ -135,66 +130,60 @@ public class EchoGame {
 
         for( ButtonColor buttonColor : buttonSequence ) {
             // Runnables for which button to start and stop flashing for this button in sequence.
-            final Runnable startFlashButton, stopFlashButton, startPlayTune, stopPlayTune;
+            final Runnable startFlashButton = getStartFlashButton( buttonColor ),
+                           stopFlashButton  = getStopFlashButton(  buttonColor ),
+                           startPlayTune    = getStartPlayTune(    buttonColor );
 
             // Calculate delays for this button in sequence.
-            delayMillisFlash   = context.getResources().getInteger( R.integer.flash_length_milliseconds )
-                               + context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
-                               + delayNextIteration;
-
             delayMillisGap     = context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
                                + delayNextIteration;
 
-            delayNextIteration = delayMillisFlash;
+            delayMillisFlash   = context.getResources().getInteger( R.integer.flash_length_milliseconds )
+                               + delayMillisGap;
 
-            // Set runnables to start and stop flashing based on color of button in sequence.
-            switch( buttonColor ) {
-                case red :
-                    startFlashButton = echoGameListener::startFlashRedButton;
-                    stopFlashButton  = echoGameListener::stopFlashRedButton;
-                    startPlayTune    = echoGameListener::startPlayRedTune;
-                    stopPlayTune     = echoGameListener::stopPlayRedTune;
-                    break;
-                case green :
-                    startFlashButton = echoGameListener::startFlashGreenButton;
-                    stopFlashButton  = echoGameListener::stopFlashGreenButton;
-                    startPlayTune    = echoGameListener::startPlayGreenTune;
-                    stopPlayTune     = echoGameListener::stopPlayGreenTune;
-                    break;
-                case blue :
-                    startFlashButton = echoGameListener::startFlashBlueButton;
-                    stopFlashButton  = echoGameListener::stopFlashBlueButton;
-                    startPlayTune    = echoGameListener::startPlayBlueTune;
-                    stopPlayTune     = echoGameListener::stopPlayBlueTune;
-                    break;
-                case yellow :
-                    startFlashButton = echoGameListener::startFlashYellowButton;
-                    stopFlashButton  = echoGameListener::stopFlashYellowButton;
-                    startPlayTune    = echoGameListener::startPlayYellowTune;
-                    stopPlayTune     = echoGameListener::stopPlayYellowTune;
-                    break;
-                default :
-                    // Should never get here, but if so, make it apparent.
-                    startFlashButton = echoGameListener::startFlashBadButton;
-                    stopFlashButton  = echoGameListener::stopFlashBadButton;
-                    startPlayTune    = echoGameListener::startPlayBadTune;
-                    stopPlayTune     = echoGameListener::stopPlayBadTune;
-            }
+            delayNextIteration = delayMillisFlash;
 
             // Start flashing the button after barely perceptible delay.  This delay prevents
             // consecutive flashes of the same button from blending together from the user's view.
-            // Then stop after a longer delay so the color being flashed is apparent.  Use the same
-            // timings for the sounds to keep things matched up, and only flash buttons or play
-            // sounds if the game mode is configured for it.
+            // Then stop after a longer delay so the color being flashed is apparent.
             if( flashButtons ) {
                 flashHandler.postDelayed( startFlashButton, delayMillisGap   );
                 flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
             }
 
-            if( playSounds ){
-                flashHandler.postDelayed( startPlayTune, delayMillisGap   );
-                flashHandler.postDelayed( stopPlayTune,  delayMillisFlash );
-            }
+            // Use the same timings for the sounds to keep things matched up, and only flash buttons
+            // or play sounds if the game mode is configured for it.
+            if( playSounds ) flashHandler.postDelayed( startPlayTune, delayMillisGap   );
+        }
+    }
+
+    private Runnable getStartFlashButton( ButtonColor buttonColor ) {
+        // Return appropriate start flash button for button color.
+        switch( buttonColor ) {
+            case red   : return echoGameListener::startFlashRedButton;
+            case green : return echoGameListener::startFlashGreenButton;
+            case blue  : return echoGameListener::startFlashBlueButton;
+            default    : return echoGameListener::startFlashYellowButton;
+        }
+    }
+
+    private Runnable getStopFlashButton( ButtonColor buttonColor ) {
+        // Return appropriate stop flash button for button color.
+        switch( buttonColor ) {
+            case red   : return echoGameListener::stopFlashRedButton;
+            case green : return echoGameListener::stopFlashGreenButton;
+            case blue  : return echoGameListener::stopFlashBlueButton;
+            default    : return echoGameListener::stopFlashYellowButton;
+        }
+    }
+
+    private Runnable getStartPlayTune( ButtonColor buttonColor ) {
+        // Return appropriate start play tune for button color.
+        switch( buttonColor ) {
+            case red   : return echoGameListener::startPlayRedTune;
+            case green : return echoGameListener::startPlayGreenTune;
+            case blue  : return echoGameListener::startPlayBlueTune;
+            default    : return echoGameListener::startPlayYellowTune;
         }
     }
 
@@ -222,36 +211,49 @@ public class EchoGame {
         ButtonColor sequenceButtonColor = buttonSequence.get( buttonIndex );
 
         // Compare button to one user tapped.
-        if( sequenceButtonColor == buttonColor ) {
-            // It matched.  Increase the compare index.
-            buttonIndex++;
-
-            // See if there are more buttons to compare.
-            if( buttonIndex == buttonSequence.size() ){
-                // Player must have matched the whole sequence.  Increase the score.
-                playerScore++;
-
-                // Flash good button and play good button tune if configured to do so.
-                if( flashButtons ) echoGameListener.startFlashGoodButton();
-                if( playSounds   ) echoGameListener.startPlayGoodTune();
-
-                // Then add to the sequence and present it, starting comparisons over.
-                buttonIndex = 0;
-                echoState   = EchoState.presenting;
-                addButtonToSequence();
-            }
+        if( sequenceButtonColor != buttonColor ) {
+            // It did not match.  Make player failure known.
+            flashAndPlayBadButton();
+            notifyGameOver();
 
             return;
         }
 
+        // It matched.  Increase the compare index.
+        buttonIndex++;
+
+        // See if there are more buttons to compare.
+        if( buttonIndex == buttonSequence.size() ){
+            // Player must have matched the whole sequence.  Increase the score.
+            playerScore++;
+
+            // Make player success known.
+            flashAndPlayGoodButton();
+
+            // Then add to the sequence and present it, starting comparisons over.
+            buttonIndex = 0;
+            echoState   = EchoState.presenting;
+            addButtonToSequence();
+        }
+    }
+
+    private void notifyGameOver() {
         // Game is over.  Publish the player's highest score, which could be from the previous round.
         echoState   = EchoState.presenting;
 
+        Log.d( "Final Score", String.format( "%d", playerScore ) );
+    }
+
+    private void flashAndPlayGoodButton() {
+        // Flash good button and play good button tune if configured to do so.
+        if( flashButtons ) echoGameListener.startFlashGoodButton();
+        if( playSounds   ) echoGameListener.startPlayGoodTune();
+    }
+
+    private void flashAndPlayBadButton() {
         // Flash bad button and play bad button tune if configured to do so.
         if( flashButtons ) echoGameListener.startFlashBadButton();
         if( playSounds   ) echoGameListener.startPlayBadTune();
-
-        Log.d( "Final Score", String.format( "%d", playerScore ) );
     }
 
     void startNewGame()       { addButtonToSequence(); }

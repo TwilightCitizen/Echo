@@ -39,7 +39,11 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
                                       mediaButtonPressBlue,
                                       mediaButtonPressYellow;
 
-    MediaPlayer[]                     mediaPlayers;
+    // All media players aggregated for batch changes.
+    private MediaPlayer[]             mediaPlayers;
+
+    // Volume for media players.
+    private final static float        MEDIA_PLAYER_VOLUME = 1.0f;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -84,7 +88,11 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         };
 
         // False start all the media players so they can play from start over each other.
-        for( MediaPlayer mediaPlayer : mediaPlayers ) falseStartMedia( mediaPlayer );
+        // Also set their volume to a nice medium.
+        for( MediaPlayer mediaPlayer : mediaPlayers ){
+            falseStartMedia( mediaPlayer );
+            mediaPlayer.setVolume( MEDIA_PLAYER_VOLUME, MEDIA_PLAYER_VOLUME );
+        }
     }
 
     private void releaseMediaPlayers() {
@@ -166,15 +174,9 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void stopFlashGoodButton()     { }
 
     @Override public void startPlayRedTune()        { playMediaFromStart( mediaButtonPressRed    ); }
-    @Override public void stopPlayRedTune()         {}
     @Override public void startPlayGreenTune()      { playMediaFromStart( mediaButtonPressGreen  ); }
-    @Override public void stopPlayGreenTune()       {}
     @Override public void startPlayBlueTune()       { playMediaFromStart( mediaButtonPressBlue   ); }
-    @Override public void stopPlayBlueTune()        {}
     @Override public void startPlayYellowTune()     { playMediaFromStart( mediaButtonPressYellow ); }
-    @Override public void stopPlayYellowTune()      {}
     @Override public void startPlayBadTune()        { playMediaFromStart( mediaButtonPressBad    ); }
-    @Override public void stopPlayBadTune()         {}
     @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood   ); }
-    @Override public void stopPlayGoodTune()        {}
 }
