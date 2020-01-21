@@ -23,7 +23,7 @@ Echo has been tested on and known to work on the following Wear OS emulator conf
 - Android Wear Square, Play Store, 240x240 (HDPI), API 26, Android 8.0 Wear
 - Android Wear Square, Play Store, 280x280 (HDPI), API 26, Android 8.0 Wear
 
-## Google Sign In
+## Getting Google Sign In to Work
 
 For Google sign in to work, the emulator must be paired with a phone connected via USB with USB Debugging enabled and communication ports forwarded:
 
@@ -48,3 +48,20 @@ Google sign in also requires the configuration of a Google API project with Echo
 Details of how this was configured can be found in [Google's Developer Resources.](https://developers.google.com/identity/sign-in/android/start)
 
 Obtaining the SHA-1 hash proved difficult according to the provided instructions, but this [resource on Stack Overflow](https://stackoverflow.com/questions/15727912/sha-1-fingerprint-of-keystore-certificate) helped simplify the process.
+
+## Status of Key Features
+
+- Memory Game with 3 Modes of Play (See & Hear, See Only, and Hear Only)
+    - 99.9% Complete
+    - Just needs some polish.
+    - Hear Only is seriously difficult!  I can hardly get 1 or 2 correct.
+- Guest Game Play or Authenticated Game Play with Score Persistence to Leaderboard
+    - 35% Complete
+    - Google Sign In works though nothing is presently done with the credentials.
+    - Guest Game Play works great.  Full functionality here.
+    - Score Persistent to Leaderboard is next major lift.
+- Intelligent Pause, Resume, and/or Reset Based on Time Spent in Orientation
+    - 99.9% Complete
+    - May need some polish.  Maybe not.  Turned out much simpler than expected.
+    - Players have no more than 3 seconds between taps before Echo call's game over.
+    - No need for Ambient Mode.
