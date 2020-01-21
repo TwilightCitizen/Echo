@@ -51,7 +51,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_echo_game );
-        setAmbientEnabled();
         getGoogleSignInAccount();
         getGameOptions();
         setupButtons();

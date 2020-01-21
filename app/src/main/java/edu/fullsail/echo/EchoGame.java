@@ -252,10 +252,8 @@ public class EchoGame {
         gameOverHandler.postDelayed( this::gameOver, gameOverDelayMillis );
     }
 
-    private void stopGameOverTimer() {
-        // Stop any running game over timer.
-        gameOverHandler.removeCallbacksAndMessages( null );
-    }
+    // Stop any running game over timer.
+    private void stopGameOverTimer() { gameOverHandler.removeCallbacksAndMessages( null ); }
 
     private void gameOver() {
         // Game is over.  Notify listener with player's final score.

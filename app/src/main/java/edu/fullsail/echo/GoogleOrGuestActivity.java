@@ -42,7 +42,6 @@ public class GoogleOrGuestActivity extends WearableActivity {
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_google_or_guest );
-        setAmbientEnabled();
         setupButtonUseGoogleAccount();
         setupButtonUseGuestAccount();
     }
