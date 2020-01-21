@@ -86,27 +86,41 @@ public class EchoGame {
     }
 
     private void presentButtonSequence() {
+        // Aggregate total delays for next iteration so all iterations do not occur at once.
         long delayNextIteration = 0;
+        long delayMillisFlash   = 0;
 
+        // Delays between button flashes and between starting and stopping a button flash.
+        long delayMillisGap     = 0;
+
+        // Total time for whole sequence.
+        long delayMillisTotal   = buttonSequence.size() * (
+            context.getResources().getInteger( R.integer.flash_length_milliseconds ) +
+            context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
+        );
+
+        // Handler to manage the start and stop of flashing buttons.
+        Handler flashHandler = new Handler();
+
+        // Start presenting sequence now.
         echoGameListener.startPresentingSequence();
 
+        // Defer stop presenting sequence until after all have transpired.
+        flashHandler.postDelayed( () -> echoGameListener.stopPresentingSequence(), delayMillisTotal );
+
         for( ButtonColor buttonColor : buttonSequence ) {
-            // Runnables for which button to start and stop flashing.
+            // Runnables for which button to start and stop flashing for this button in sequence.
             final Runnable startFlashButton, stopFlashButton;
 
-            // Handler to manage the start and stop of flashing buttons.
-            Handler flashHandler = new Handler();
+            // Calculate delays for this button in sequence.
+            delayMillisFlash   = context.getResources().getInteger( R.integer.flash_length_milliseconds )
+                               + context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
+                               + delayNextIteration;
 
-            // Delays between button flashes and between starting and stopping a button flash.
-            final long delayMillisFlash  = context.getResources().getInteger( R.integer.flash_length_milliseconds )
-                                         + context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
-                                         + delayNextIteration;
+            delayMillisGap     = context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
+                               + delayNextIteration;
 
-            final long delayMillisGap    = context.getResources().getInteger( R.integer.flash_gap_milliseconds    )
-                                         + delayNextIteration;
-
-            // Aggregate total delays for next iteration so all iterations do not occur at once.
-            delayNextIteration           = delayMillisFlash;
+            delayNextIteration = delayMillisFlash;
 
             // Set runnables to start and stop flashing based on color of button in sequence.
             switch( buttonColor ) {
@@ -137,8 +151,6 @@ public class EchoGame {
             flashHandler.postDelayed( startFlashButton, delayMillisGap   );
             flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
         }
-
-        echoGameListener.stopPresentingSequence();
     }
 
     private void addButtonToSequence() {
