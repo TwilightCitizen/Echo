@@ -4,6 +4,17 @@
 
 Echo is a Wear OS 2.0 application, providing an enhanced, modern experience of the popular game Simon.
 
+## Image and Audio Resources
+
+All image and audio resources were created by me.
+
+The Echo logo was rendered in Adobe XD in [Technique font by Brian Kent, available on Free Font, ](https://www.fontsquirrel.com/fonts/Technique-BRK) then exported to PNG.
+
+All other images were either rendered in Adobe XD, exported as SVG, and vectorized in Android Studio, or were built as vectors directly in Android Studio.
+
+All audio files are MIDI files that were sequenced, generated, and exported from [Online Sequencer.](https://onlinesequencer.net)
+
+
 ## Tested Device Emulators
 
 Echo has been tested on and known to work on the following Wear OS emulator configurations:

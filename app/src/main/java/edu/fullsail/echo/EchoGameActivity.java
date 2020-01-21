@@ -66,6 +66,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     private void setupMediaPlayers() {
+        // Setup media players for each button press (or flash).
         mediaButtonPressBad    = MediaPlayer.create( this, R.raw.button_press_bad    );
         mediaButtonPressRed    = MediaPlayer.create( this, R.raw.button_press_red    );
         mediaButtonPressGreen  = MediaPlayer.create( this, R.raw.button_press_green  );
@@ -74,11 +75,13 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     private void releaseMediaPlayers() {
+        // Collect all the media players.
         MediaPlayer[] mediaPlayers = new MediaPlayer[] {
             mediaButtonPressBad,  mediaButtonPressRed,   mediaButtonPressGreen,
             mediaButtonPressBlue, mediaButtonPressYellow
         };
 
+        // Release them to avoid choking resources.
         for( MediaPlayer mediaPlayer : mediaPlayers ) mediaPlayer.release();
     }
 
