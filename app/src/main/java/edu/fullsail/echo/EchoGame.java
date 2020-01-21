@@ -73,20 +73,23 @@ public class EchoGame {
     private final Context             context;
 
     // State of Echo Game.
-    private       EchoState           echoState      = EchoState.presenting;
+    private       EchoState           echoState       = EchoState.presenting;
 
     // Sequence of buttons that Echo will present.
-    private final List< ButtonColor > buttonSequence = new ArrayList<>();
+    private final List< ButtonColor > buttonSequence  = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
     private       boolean             flashButtons,
                                       playSounds;
 
     // Index of button in sequence to compare against the user's tap.
-    private       int                 buttonIndex    = 0;
+    private       int                 buttonIndex     = 0;
 
     // Number of sequence steps the user successfully echoed.
-    private       int                 playerScore    = 0;
+    private       int                 playerScore     = 0;
+
+    // Handler for game over timer.
+    private       Handler             gameOverHandler = new Handler();
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
@@ -121,9 +124,12 @@ public class EchoGame {
         // Start presenting sequence now.
         echoGameListener.startPresentingSequence();
 
-        // Defer stop presenting sequence until after all have transpired.
+        // Defer stop presenting sequence and starting game over timer for comparisons
+        // until after the whole presentation has transpired.
         flashHandler.postDelayed( () -> {
             echoGameListener.stopPresentingSequence();
+            startGameOverTimer();
+
             echoState = EchoState.comparing;
         }, delayMillisTotal );
 
@@ -207,40 +213,58 @@ public class EchoGame {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
 
+        // Start game over timer for user's next tap.
+        startGameOverTimer();
+
         // Button to compare tap against.
         ButtonColor sequenceButtonColor = buttonSequence.get( buttonIndex );
 
-        // Compare button to one user tapped.
-        if( sequenceButtonColor != buttonColor ) {
-            // It did not match.  Make player failure known.
-            flashAndPlayBadButton();
-            notifyGameOver();
-
-            return;
-        }
+        // Make player failure known.
+        if( sequenceButtonColor != buttonColor ) { gameOver(); return; }
 
         // It matched.  Increase the compare index.
         buttonIndex++;
 
         // See if there are more buttons to compare.
-        if( buttonIndex == buttonSequence.size() ){
+        if( buttonIndex == buttonSequence.size() ) {
             // Player must have matched the whole sequence.  Increase the score.
             playerScore++;
 
-            // Make player success known.
+            // Make player success known and stop the game over timer.
             flashAndPlayGoodButton();
+            stopGameOverTimer();
 
             // Then add to the sequence and present it, starting comparisons over.
             buttonIndex = 0;
             echoState   = EchoState.presenting;
+
             addButtonToSequence();
         }
     }
 
-    private void notifyGameOver() {
+    private void startGameOverTimer() {
+        // Configurable delay for game over timer in seconds and milliseconds.
+        final int  gameOverDelaySeconds = context.getResources().getInteger( R.integer.game_over_delay_seconds );
+        final long gameOverDelayMillis  = TimeUnit.SECONDS.toMillis( gameOverDelaySeconds );
+
+        // Stop any running game over timer and replace it.
+        stopGameOverTimer();
+        gameOverHandler.postDelayed( this::gameOver, gameOverDelayMillis );
+    }
+
+    private void stopGameOverTimer() {
+        // Stop any running game over timer.
+        gameOverHandler.removeCallbacksAndMessages( null );
+    }
+
+    private void gameOver() {
         // Game is over.  Notify listener with player's final score.
         echoState  = EchoState.presenting;
 
+        // Stop any running game over timer to prevent a double game over.
+        stopGameOverTimer();
+        // Notify listener/delegate of bad button tap or timeout and game over.
+        flashAndPlayBadButton();
         echoGameListener.gameOver( playerScore );
     }
 
