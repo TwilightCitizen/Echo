@@ -81,49 +81,16 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
-    @Override public void startPresentingSequence() {
-        overlaySubdueAll.setVisibility( View.VISIBLE );
-    }
-
-    @Override public void startFlashRedButton() {
-        overlayFlashRed.setVisibility( View.VISIBLE );
-    }
-
-    @Override public void stopFlashRedButton() {
-        overlayFlashRed.setVisibility( View.GONE );
-    }
-
-    @Override public void startFlashGreenButton() {
-        overlayFlashGreen.setVisibility( View.VISIBLE );
-    }
-
-    @Override public void stopFlashGreenButton() {
-        overlayFlashGreen.setVisibility( View.GONE );
-    }
-
-    @Override public void startFlashBlueButton() {
-        overlayFlashBlue.setVisibility( View.VISIBLE );
-    }
-
-    @Override public void stopFlashBlueButton() {
-        overlayFlashBlue.setVisibility( View.GONE );
-    }
-
-    @Override public void startFlashYellowButton() {
-        overlayFlashYellow.setVisibility( View.VISIBLE );
-    }
-
-    @Override public void stopFlashYellowButton() {
-        overlayFlashYellow.setVisibility( View.GONE );
-    }
-
-    @Override public void startFlashBadButton() {
-    }
-
-    @Override public void stopFlashBadButton() {
-    }
-
-    @Override public void stopPresentingSequence() {
-        overlaySubdueAll.setVisibility( View.GONE );
-    }
+    @Override public void startPresentingSequence() { overlaySubdueAll.setVisibility(   View.VISIBLE ); }
+    @Override public void startFlashRedButton()     { overlayFlashRed.setVisibility(    View.VISIBLE ); }
+    @Override public void stopFlashRedButton()      { overlayFlashRed.setVisibility(    View.GONE );    }
+    @Override public void startFlashGreenButton()   { overlayFlashGreen.setVisibility(  View.VISIBLE ); }
+    @Override public void stopFlashGreenButton()    { overlayFlashGreen.setVisibility(  View.GONE );    }
+    @Override public void startFlashBlueButton()    { overlayFlashBlue.setVisibility(   View.VISIBLE ); }
+    @Override public void stopFlashBlueButton()     { overlayFlashBlue.setVisibility(   View.GONE );    }
+    @Override public void startFlashYellowButton()  { overlayFlashYellow.setVisibility( View.VISIBLE ); }
+    @Override public void stopFlashYellowButton()   { overlayFlashYellow.setVisibility( View.GONE );    }
+    @Override public void startFlashBadButton()     { }
+    @Override public void stopFlashBadButton()      { }
+    @Override public void stopPresentingSequence()  { overlaySubdueAll.setVisibility(   View.GONE );    }
 }
