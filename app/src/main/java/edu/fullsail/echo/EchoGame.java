@@ -79,8 +79,8 @@ public class EchoGame {
     private final List< ButtonColor > buttonSequence  = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private       boolean             flashButtons,
-                                      playSounds;
+    private final boolean             flashButtons;
+    private final boolean playSounds;
 
     // Index of button in sequence to compare against the user's tap.
     private       int                 buttonIndex     = 0;
@@ -89,7 +89,7 @@ public class EchoGame {
     private       int                 playerScore     = 0;
 
     // Handler for game over timer.
-    private       Handler             gameOverHandler = new Handler();
+    private final Handler             gameOverHandler = new Handler();
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
