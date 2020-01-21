@@ -13,34 +13,40 @@ import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+/*
+Echo Game activity creates an Echo Game instance with the configuration options from the calling
+activity and starts the game.  It sets itself as Echo Game's delegate/listener and responds to
+Echo Game events, also sending buttons taps to Echo Game when they occur.
+*/
 public class EchoGameActivity extends WearableActivity implements EchoGame.EchoGameListener {
     // Game options obtained from calling activity.
-    private boolean                   flashButtons;
-    private boolean                   playSounds;
+    private boolean             flashButtons;
+    private boolean             playSounds;
 
     // Google Account obtained from calling activity.
-    private GoogleSignInAccount       googleSignInAccount = null;
+    private GoogleSignInAccount googleSignInAccount = null;
 
     // Echo Game maintains the game logic to which this activity responds.
-    private EchoGame                  echoGame;
+    private EchoGame            echoGame;
 
     // Overlays that fake highlighting a button.
-    private ImageView                 overlayFlashRed,    overlayFlashGreen, overlayFlashBlue,
-                                      overlayFlashYellow, overlaySubdueAll,  overlayFlashGood,
-                                      overlayFlashBad;
+    private ImageView           overlayFlashRed,    overlayFlashGreen, overlayFlashBlue,
+                                overlayFlashYellow, overlaySubdueAll,  overlayFlashGood,
+                                overlayFlashBad;
 
     // Media players for MIDI sound bites.
-    private MediaPlayer               mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
-                                      mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow;
+    private MediaPlayer         mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
+                                mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow;
 
     // All media players aggregated for batch changes.
-    private MediaPlayer[]             mediaPlayers;
+    private MediaPlayer[]       mediaPlayers;
 
     // Volume for media players.
-    private final static float        MEDIA_PLAYER_VOLUME = 1.0f;
+    private final static float  MEDIA_PLAYER_VOLUME = 1.0f;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -181,6 +187,21 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood       ); }
 
     @Override public void gameOver( int finalScore ) {
+        // Get handles to the game over and final score text fields.
+        TextView textGameOver   = findViewById( R.id.textGameOver   );
+        TextView textFinalScore = findViewById( R.id.textFinalScore );
+        // Get handle to the go back button.
+        Button   buttonGoBack   = findViewById( R.id.buttonGoBack  );
 
+        // Show the game over and final score text fields and the go back button,.
+        textGameOver.setVisibility(   View.VISIBLE );
+        textFinalScore.setVisibility( View.VISIBLE );
+        buttonGoBack.setVisibility(   View.VISIBLE );
+
+        // Set the final score text to show the player's final score.
+        textFinalScore.setText( String.format( getString( R.string.final_score ), finalScore ) );
+
+        // Set the go back button listener to dismiss the finished game.
+        buttonGoBack.setOnClickListener( ( View v ) -> finish() );
     }
 }

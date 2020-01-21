@@ -22,4 +22,6 @@
     <string name="flash_buttons">Flash Buttons</string>
     <string name="play_tunes">Play Tunes</string>
     <string name="button_overlay">Button Overlay</string>
+    <string name="game_over">GAME OVER!</string>
+    <string name="final_score">FINAL SCORE: %d</string>
 </resources>
