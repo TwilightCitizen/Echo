@@ -24,10 +24,9 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     private EchoGame                  echoGame;
 
     // Colored game buttons.
-    Button buttonRed;
-    Button buttonGreen;
-    Button buttonBlue;
-    Button buttonYellow;
+    private Button                    buttonRed, buttonGreen, buttonBlue, buttonYellow;
+
+    private Button[]                  allButtons;
 
     // Overlays that fake highlighting a button.
     ImageView overlayFlashRed;
@@ -59,10 +58,12 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     private void setupButtons() {
         // Obtain handles to all the game buttons.
-        buttonRed    = findViewById(  R.id.buttonRed   );
-        buttonGreen  = findViewById(  R.id.buttonGreen );
-        buttonBlue   = findViewById(  R.id.buttonBlue  );
+        buttonRed    = findViewById( R.id.buttonRed    );
+        buttonGreen  = findViewById( R.id.buttonGreen  );
+        buttonBlue   = findViewById( R.id.buttonBlue   );
         buttonYellow = findViewById( R.id.buttonYellow );
+
+        allButtons   = new Button[] { buttonRed, buttonGreen, buttonBlue, buttonYellow };
 
         // Forward their taps to the Echo Game's handlers.
         buttonRed.setOnClickListener(    ( View v ) -> echoGame.redButtonTapped()    );
@@ -87,7 +88,11 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
+    private void hideAllButtons() { for( Button button : allButtons ) button.setVisibility( View.GONE    ); }
+    private void showAllButtons() { for( Button button : allButtons ) button.setVisibility( View.VISIBLE ); }
+
     @Override public void startPresentingSequence() {
+        hideAllButtons();
         overlaySubdueAll.setVisibility( View.VISIBLE );
     }
 
@@ -130,6 +135,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     @Override public void stopPresentingSequence() {
+        showAllButtons();
         overlaySubdueAll.setVisibility( View.GONE );
     }
 }
