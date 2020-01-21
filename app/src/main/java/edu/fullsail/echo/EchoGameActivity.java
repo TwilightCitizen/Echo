@@ -23,9 +23,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     // Echo Game maintains the game logic to which this activity responds.
     private EchoGame                  echoGame;
 
-    // Colored game buttons.
-    private Button[]                  allButtons;
-
     // Overlays that fake highlighting a button.
     private ImageView overlayFlashRed;
     private ImageView overlayFlashGreen;
@@ -61,8 +58,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         Button buttonBlue   = findViewById( R.id.buttonBlue   );
         Button buttonYellow = findViewById( R.id.buttonYellow );
 
-        allButtons   = new Button[] { buttonRed, buttonGreen, buttonBlue, buttonYellow };
-
         // Forward their taps to the Echo Game's handlers.
         buttonRed.setOnClickListener(    ( View v ) -> echoGame.redButtonTapped()    );
         buttonGreen.setOnClickListener(  ( View v ) -> echoGame.greenButtonTapped()  );
@@ -86,11 +81,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
-    private void hideAllButtons() { for( Button button : allButtons ) button.setVisibility( View.GONE    ); }
-    private void showAllButtons() { for( Button button : allButtons ) button.setVisibility( View.VISIBLE ); }
-
     @Override public void startPresentingSequence() {
-        hideAllButtons();
         overlaySubdueAll.setVisibility( View.VISIBLE );
     }
 
@@ -133,7 +124,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     @Override public void stopPresentingSequence() {
-        showAllButtons();
         overlaySubdueAll.setVisibility( View.GONE );
     }
 }
