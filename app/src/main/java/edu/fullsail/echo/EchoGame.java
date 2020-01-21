@@ -9,12 +9,9 @@ package edu.fullsail.echo;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -82,8 +79,8 @@ public class EchoGame {
     private final List< ButtonColor > buttonSequence = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private       boolean             flashButtons   = true,
-                                      playSounds     = true;
+    private       boolean             flashButtons,
+                                      playSounds;
 
     // Index of button in sequence to compare against the user's tap.
     private       int                 buttonIndex    = 0;

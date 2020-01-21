@@ -14,7 +14,6 @@ All other images were either rendered in Adobe XD, exported as SVG, and vectoriz
 
 All audio files are MIDI files that were sequenced, generated, and exported from [Online Sequencer.](https://onlinesequencer.net)
 
-
 ## Tested Device Emulators
 
 Echo has been tested on and known to work on the following Wear OS emulator configurations:

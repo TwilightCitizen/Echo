@@ -25,12 +25,12 @@ activity along with the configured options.
 */
 public class GameOptionsActivity extends WearableActivity {
     // Tags for passing the game options to the Echo Game activity.
-    public static final String FLASH_BUTTONS = "FLASH_BUTTONS";
-    public static final String PLAY_SOUNDS   = "PLAY_SOUNDS";
+    public static final String       FLASH_BUTTONS = "FLASH_BUTTONS";
+    public static final String       PLAY_SOUNDS   = "PLAY_SOUNDS";
 
     // Toggles for game options.
-    ToggleButton toggleFlashButtons;
-    ToggleButton togglePlaySounds;
+    private             ToggleButton toggleFlashButtons;
+    private             ToggleButton togglePlaySounds;
 
     // Google Sign In account from calling activity.
     private GoogleSignInAccount googleSignInAccount = null;
