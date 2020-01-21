@@ -24,4 +24,5 @@
     <string name="button_overlay">Button Overlay</string>
     <string name="game_over">GAME OVER!</string>
     <string name="final_score">FINAL SCORE: %d</string>
+    <string name="leaders">Leaders</string>
 </resources>
