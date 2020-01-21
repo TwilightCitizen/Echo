@@ -7,6 +7,7 @@ C20200101
 
 package edu.fullsail.echo;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
@@ -24,11 +25,18 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     private EchoGame                  echoGame;
 
     // Overlays that fake highlighting a button.
-    private ImageView overlayFlashRed;
-    private ImageView overlayFlashGreen;
-    private ImageView overlayFlashBlue;
-    private ImageView overlayFlashYellow;
-    private ImageView overlaySubdueAll;
+    private ImageView                 overlayFlashRed,
+                                      overlayFlashGreen,
+                                      overlayFlashBlue,
+                                      overlayFlashYellow,
+                                      overlaySubdueAll;
+
+    // Media players for MIDI sound bites.
+    private MediaPlayer               mediaButtonPressBad,
+                                      mediaButtonPressRed,
+                                      mediaButtonPressGreen,
+                                      mediaButtonPressBlue,
+                                      mediaButtonPressYellow;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -37,8 +45,14 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         getGoogleSignInAccount();
         getGameMode();
         setupButtons();
+        setupMediaPlayers();
         setupOverlays();
         setupEchoGame();
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        releaseMediaPlayers();
     }
 
     private void getGoogleSignInAccount() {
@@ -51,6 +65,23 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         gameMode = GameModeActivity.GameMode.values()[ getIntent().getIntExtra( GameModeActivity.GAME_MODE, 0 ) ];
     }
 
+    private void setupMediaPlayers() {
+        mediaButtonPressBad    = MediaPlayer.create( this, R.raw.button_press_bad    );
+        mediaButtonPressRed    = MediaPlayer.create( this, R.raw.button_press_red    );
+        mediaButtonPressGreen  = MediaPlayer.create( this, R.raw.button_press_green  );
+        mediaButtonPressBlue   = MediaPlayer.create( this, R.raw.button_press_blue   );
+        mediaButtonPressYellow = MediaPlayer.create( this, R.raw.button_press_yellow );
+    }
+
+    private void releaseMediaPlayers() {
+        MediaPlayer[] mediaPlayers = new MediaPlayer[] {
+            mediaButtonPressBad,  mediaButtonPressRed,   mediaButtonPressGreen,
+            mediaButtonPressBlue, mediaButtonPressYellow
+        };
+
+        for( MediaPlayer mediaPlayer : mediaPlayers ) mediaPlayer.release();
+    }
+
     private void setupButtons() {
         // Obtain handles to all the game buttons.
         Button buttonRed    = findViewById( R.id.buttonRed    );
@@ -59,10 +90,25 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         Button buttonYellow = findViewById( R.id.buttonYellow );
 
         // Forward their taps to the Echo Game's handlers.
-        buttonRed.setOnClickListener(    ( View v ) -> echoGame.redButtonTapped()    );
-        buttonGreen.setOnClickListener(  ( View v ) -> echoGame.greenButtonTapped()  );
-        buttonBlue.setOnClickListener(   ( View v ) -> echoGame.blueButtonTapped()   );
-        buttonYellow.setOnClickListener( ( View V ) -> echoGame.yellowButtonTapped() );
+        buttonRed.setOnClickListener(    ( View v ) -> {
+            mediaButtonPressRed.start();
+            echoGame.redButtonTapped();
+        } );
+
+        buttonGreen.setOnClickListener(  ( View v ) -> {
+            mediaButtonPressGreen.start();
+            echoGame.greenButtonTapped();
+        } );
+
+        buttonBlue.setOnClickListener(   ( View v ) -> {
+            mediaButtonPressBlue.start();
+            echoGame.blueButtonTapped();
+        } );
+
+        buttonYellow.setOnClickListener( ( View V ) -> {
+            mediaButtonPressYellow.start();
+            echoGame.yellowButtonTapped();
+        } );
     }
 
     private void setupOverlays() {
@@ -83,6 +129,8 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     // Respond to Echo Game listener events.
     @Override public void startPresentingSequence() { overlaySubdueAll.setVisibility(   View.VISIBLE ); }
+    @Override public void stopPresentingSequence()  { overlaySubdueAll.setVisibility(   View.GONE    ); }
+
     @Override public void startFlashRedButton()     { overlayFlashRed.setVisibility(    View.VISIBLE ); }
     @Override public void stopFlashRedButton()      { overlayFlashRed.setVisibility(    View.GONE    ); }
     @Override public void startFlashGreenButton()   { overlayFlashGreen.setVisibility(  View.VISIBLE ); }
@@ -93,5 +141,15 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void stopFlashYellowButton()   { overlayFlashYellow.setVisibility( View.GONE    ); }
     @Override public void startFlashBadButton()     { }
     @Override public void stopFlashBadButton()      { }
-    @Override public void stopPresentingSequence()  { overlaySubdueAll.setVisibility(   View.GONE    ); }
+
+    @Override public void startPlayRedTune()        { mediaButtonPressRed.start();    }
+    @Override public void stopPlayRedTune()         {}
+    @Override public void startPlayGreenTune()      { mediaButtonPressGreen.start();  }
+    @Override public void stopPlayGreenTune()       {}
+    @Override public void startPlayBlueTune()       { mediaButtonPressBlue.start();   }
+    @Override public void stopPlayBlueTune()        {}
+    @Override public void startPlayYellowTune()     { mediaButtonPressYellow.start(); }
+    @Override public void stopPlayYellowTune()      {}
+    @Override public void startPlayBadTune()        { mediaButtonPressBad.start();    }
+    @Override public void stopPlayBadTune()         {}
 }

@@ -27,6 +27,8 @@ public class EchoGame {
     // Interface that Echo Game delegates/listeners must adhere to.
     public interface EchoGameListener {
         void startPresentingSequence();
+        void stopPresentingSequence();
+
         void startFlashRedButton();
         void stopFlashRedButton();
         void startFlashGreenButton();
@@ -37,7 +39,17 @@ public class EchoGame {
         void stopFlashYellowButton();
         void startFlashBadButton();
         void stopFlashBadButton();
-        void stopPresentingSequence();
+
+        void startPlayRedTune();
+        void stopPlayRedTune();
+        void startPlayGreenTune();
+        void stopPlayGreenTune();
+        void startPlayBlueTune();
+        void stopPlayBlueTune();
+        void startPlayYellowTune();
+        void stopPlayYellowTune();
+        void startPlayBadTune();
+        void stopPlayBadTune();
     }
 
     // States that Echo Game can be in.
@@ -119,7 +131,7 @@ public class EchoGame {
 
         for( ButtonColor buttonColor : buttonSequence ) {
             // Runnables for which button to start and stop flashing for this button in sequence.
-            final Runnable startFlashButton, stopFlashButton;
+            final Runnable startFlashButton, stopFlashButton, startPlayTune, stopPlayTune;
 
             // Calculate delays for this button in sequence.
             delayMillisFlash   = context.getResources().getInteger( R.integer.flash_length_milliseconds )
@@ -136,29 +148,49 @@ public class EchoGame {
                 case red :
                     startFlashButton = echoGameListener::startFlashRedButton;
                     stopFlashButton  = echoGameListener::stopFlashRedButton;
+                    startPlayTune    = echoGameListener::startPlayRedTune;
+                    stopPlayTune     = echoGameListener::stopPlayRedTune;
                     break;
                 case green :
                     startFlashButton = echoGameListener::startFlashGreenButton;
                     stopFlashButton  = echoGameListener::stopFlashGreenButton;
+                    startPlayTune    = echoGameListener::startPlayGreenTune;
+                    stopPlayTune     = echoGameListener::stopPlayGreenTune;
                     break;
                 case blue :
                     startFlashButton = echoGameListener::startFlashBlueButton;
                     stopFlashButton  = echoGameListener::stopFlashBlueButton;
+                    startPlayTune    = echoGameListener::startPlayBlueTune;
+                    stopPlayTune     = echoGameListener::stopPlayBlueTune;
                     break;
                 case yellow :
                     startFlashButton = echoGameListener::startFlashYellowButton;
                     stopFlashButton  = echoGameListener::stopFlashYellowButton;
+                    startPlayTune    = echoGameListener::startPlayYellowTune;
+                    stopPlayTune     = echoGameListener::stopPlayYellowTune;
                     break;
                 default :
+                    // Should never get here, but if so, make it apparent.
                     startFlashButton = echoGameListener::startFlashBadButton;
                     stopFlashButton  = echoGameListener::stopFlashBadButton;
+                    startPlayTune    = echoGameListener::startPlayBadTune;
+                    stopPlayTune     = echoGameListener::stopPlayBadTune;
             }
 
             // Start flashing the button after barely perceptible delay.  This delay prevents
             // consecutive flashes of the same button from blending together from the user's view.
-            // Then stop after a longer delay so the color being flashed is apparent.
-            flashHandler.postDelayed( startFlashButton, delayMillisGap   );
-            flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
+            // Then stop after a longer delay so the color being flashed is apparent.  Use the same
+            // timings for the sounds to keep things matched up, and only flash buttons or play
+            // sounds if the game mode is configured for it.
+            if( flashButtons ) {
+                flashHandler.postDelayed( startFlashButton, delayMillisGap   );
+                flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
+            }
+
+            if( playSounds ){
+                flashHandler.postDelayed( startPlayTune, delayMillisGap   );
+                flashHandler.postDelayed( stopPlayTune,  delayMillisFlash );
+            }
         }
     }
 

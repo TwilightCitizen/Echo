@@ -3,7 +3,7 @@
 <resources>
     <integer name="splash_delay_seconds">2</integer>
     <integer name="notification_delay_seconds">2</integer>
-    <integer name="flash_length_milliseconds">500</integer>
+    <integer name="flash_length_milliseconds">800</integer>
     <integer name="flash_gap_milliseconds">100</integer>
     <integer name="sequence_delay_seconds">1</integer>
 </resources>
