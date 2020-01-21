@@ -53,7 +53,7 @@ public class EchoGame {
     }
 
     // States that Echo Game can be in.
-    public enum EchoState   { presenting, comparing, waiting }
+    public enum EchoState   { presenting, comparing }
 
     // Buttons of particular color.
     public enum ButtonColor {
@@ -239,7 +239,8 @@ public class EchoGame {
         // Game is over.  Publish the player's highest score, which could be from the previous round.
         echoState   = EchoState.presenting;
 
-        Log.d( "Game Over", String.format( "Player Score: %d", playerScore ) );
+        if( flashButtons ) echoGameListener.startFlashBadButton();
+        if( playSounds   ) echoGameListener.startPlayBadTune();
     }
 
     void startNewGame()       { addButtonToSequence(); }
