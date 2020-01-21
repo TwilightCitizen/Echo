@@ -34,6 +34,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     ImageView overlayFlashGreen;
     ImageView overlayFlashBlue;
     ImageView overlayFlashYellow;
+    ImageView overlaySubdueAll;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -71,10 +72,12 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     private void setupOverlays() {
+        // Obtain handles to all the flashing button overlays.
         overlayFlashRed    = findViewById( R.id.imageRedFlash    );
         overlayFlashGreen  = findViewById( R.id.imageGreenFlash  );
         overlayFlashBlue   = findViewById( R.id.imageBlueFlash   );
         overlayFlashYellow = findViewById( R.id.imageYellowFlash );
+        overlaySubdueAll   = findViewById( R.id.imageSubdueAll   );
     }
 
     private void setupEchoGame() {
@@ -82,6 +85,10 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame = new EchoGame( this, this, gameMode.getFlashesButtons(), gameMode.getPlaysSounds() );
 
         echoGame.startNewGame();
+    }
+
+    @Override public void startPresentingSequence() {
+        overlaySubdueAll.setVisibility( View.VISIBLE );
     }
 
     @Override public void startFlashRedButton() {
@@ -120,5 +127,9 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     @Override public void stopFlashBadButton() {
+    }
+
+    @Override public void stopPresentingSequence() {
+        overlaySubdueAll.setVisibility( View.GONE );
     }
 }

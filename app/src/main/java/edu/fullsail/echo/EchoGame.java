@@ -26,6 +26,7 @@ correctly or within enough time.
 public class EchoGame {
     // Interface that Echo Game delegates/listeners must adhere to.
     public interface EchoGameListener {
+        void startPresentingSequence();
         void startFlashRedButton();
         void stopFlashRedButton();
         void startFlashGreenButton();
@@ -36,6 +37,7 @@ public class EchoGame {
         void stopFlashYellowButton();
         void startFlashBadButton();
         void stopFlashBadButton();
+        void stopPresentingSequence();
     }
 
     // States that Echo Game can be in.
@@ -86,6 +88,8 @@ public class EchoGame {
     private void presentButtonSequence() {
         long delayNextIteration = 0;
 
+        echoGameListener.startPresentingSequence();
+
         for( ButtonColor buttonColor : buttonSequence ) {
             // Runnables for which button to start and stop flashing.
             final Runnable startFlashButton, stopFlashButton;
@@ -133,6 +137,8 @@ public class EchoGame {
             flashHandler.postDelayed( startFlashButton, delayMillisGap   );
             flashHandler.postDelayed( stopFlashButton,  delayMillisFlash );
         }
+
+        echoGameListener.stopPresentingSequence();
     }
 
     private void addButtonToSequence() {
