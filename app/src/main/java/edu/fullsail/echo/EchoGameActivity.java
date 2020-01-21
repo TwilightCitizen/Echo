@@ -33,10 +33,13 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     // Media players for MIDI sound bites.
     private MediaPlayer               mediaButtonPressBad,
+                                      mediaButtonPressGood,
                                       mediaButtonPressRed,
                                       mediaButtonPressGreen,
                                       mediaButtonPressBlue,
                                       mediaButtonPressYellow;
+
+    MediaPlayer[]                     mediaPlayers;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -68,15 +71,16 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     private void setupMediaPlayers() {
         // Setup media players for each button press (or flash).
         mediaButtonPressBad    = MediaPlayer.create( this, R.raw.button_press_bad    );
+        mediaButtonPressGood   = MediaPlayer.create( this, R.raw.button_press_good   );
         mediaButtonPressRed    = MediaPlayer.create( this, R.raw.button_press_red    );
         mediaButtonPressGreen  = MediaPlayer.create( this, R.raw.button_press_green  );
         mediaButtonPressBlue   = MediaPlayer.create( this, R.raw.button_press_blue   );
         mediaButtonPressYellow = MediaPlayer.create( this, R.raw.button_press_yellow );
 
         // Collect all the media players.
-        MediaPlayer[] mediaPlayers = new MediaPlayer[] {
-                mediaButtonPressBad,  mediaButtonPressRed,   mediaButtonPressGreen,
-                mediaButtonPressBlue, mediaButtonPressYellow
+        mediaPlayers = new MediaPlayer[] {
+                mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
+                mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow
         };
 
         // False start all the media players so they can play from start over each other.
@@ -84,12 +88,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     }
 
     private void releaseMediaPlayers() {
-        // Collect all the media players.
-        MediaPlayer[] mediaPlayers = new MediaPlayer[] {
-            mediaButtonPressBad,  mediaButtonPressRed,   mediaButtonPressGreen,
-            mediaButtonPressBlue, mediaButtonPressYellow
-        };
-
         // Release them to avoid choking resources.
         for( MediaPlayer mediaPlayer : mediaPlayers ) mediaPlayer.release();
     }
@@ -164,6 +162,8 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void stopFlashYellowButton()   { overlayFlashYellow.setVisibility( View.GONE    ); }
     @Override public void startFlashBadButton()     { }
     @Override public void stopFlashBadButton()      { }
+    @Override public void startFlashGoodButton()    { }
+    @Override public void stopFlashGoodButton()     { }
 
     @Override public void startPlayRedTune()        { playMediaFromStart( mediaButtonPressRed    ); }
     @Override public void stopPlayRedTune()         {}
@@ -175,4 +175,6 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void stopPlayYellowTune()      {}
     @Override public void startPlayBadTune()        { playMediaFromStart( mediaButtonPressBad    ); }
     @Override public void stopPlayBadTune()         {}
+    @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood   ); }
+    @Override public void stopPlayGoodTune()        {}
 }

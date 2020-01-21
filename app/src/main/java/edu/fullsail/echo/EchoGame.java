@@ -39,6 +39,8 @@ public class EchoGame {
         void stopFlashYellowButton();
         void startFlashBadButton();
         void stopFlashBadButton();
+        void startFlashGoodButton();
+        void stopFlashGoodButton();
 
         void startPlayRedTune();
         void stopPlayRedTune();
@@ -50,6 +52,8 @@ public class EchoGame {
         void stopPlayYellowTune();
         void startPlayBadTune();
         void stopPlayBadTune();
+        void startPlayGoodTune();
+        void stopPlayGoodTune();
     }
 
     // States that Echo Game can be in.
@@ -227,6 +231,10 @@ public class EchoGame {
                 // Player must have matched the whole sequence.  Increase the score.
                 playerScore++;
 
+                // Flash good button and play good button tune if configured to do so.
+                if( flashButtons ) echoGameListener.startFlashGoodButton();
+                if( playSounds   ) echoGameListener.startPlayGoodTune();
+
                 // Then add to the sequence and present it, starting comparisons over.
                 buttonIndex = 0;
                 echoState   = EchoState.presenting;
@@ -239,8 +247,11 @@ public class EchoGame {
         // Game is over.  Publish the player's highest score, which could be from the previous round.
         echoState   = EchoState.presenting;
 
+        // Flash bad button and play bad button tune if configured to do so.
         if( flashButtons ) echoGameListener.startFlashBadButton();
         if( playSounds   ) echoGameListener.startPlayBadTune();
+
+        Log.d( "Final Score", String.format( "%d", playerScore ) );
     }
 
     void startNewGame()       { addButtonToSequence(); }
