@@ -53,7 +53,7 @@ public class GameModeActivity extends WearableActivity {
             this.playSounds      = playSounds;
         }
 
-        public static GameMode getGameMode( int forSeekBarPosition ) {
+        static GameMode getGameMode( int forSeekBarPosition ) {
             // Return the first Game Mode whose Seek Bar position matches.
             for( GameMode gameMode : GameMode.values() )
                 if( gameMode.seekBarPosition == forSeekBarPosition ) return gameMode;
@@ -63,7 +63,7 @@ public class GameModeActivity extends WearableActivity {
         }
 
         // Return the Text Label associated with the Game Mode.
-        public int getGameModeLabel() { return gameModeLabel; }
+        int getGameModeLabel() { return gameModeLabel; }
 
         // Return whether or not the Game Mode flashes buttons or plays sounds.
         public boolean getFlashesButtons() { return flashButtons; }

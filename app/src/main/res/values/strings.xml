@@ -18,7 +18,6 @@
     <string name="failed_google_sign_in">Failed to Sign into Google</string>
     <string name="title_activity_leaderboard">LeaderboardActivity</string>
     <string name="title_activity_game_mode">GameModeActivity</string>
-    <string name="flash_colors">Flash Colors</string>
     <string name="start_game">Start Game</string>
     <string name="see_hear">See &amp; Hear</string>
     <string name="see_only">See Only</string>

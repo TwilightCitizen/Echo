@@ -11,9 +11,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +46,7 @@ public class EchoGame {
         red, green, blue, yellow;
 
         // Get a random button color.
-        public static ButtonColor getRandom() {
+        static ButtonColor getRandom() {
             Random        random = new Random();
             ButtonColor[] values = ButtonColor.values();
 
@@ -57,20 +55,20 @@ public class EchoGame {
     }
 
     // Delegate/Listener the Echo Game requires.
-    private EchoGameListener    echoGameListener;
+    private final EchoGameListener    echoGameListener;
 
     // Context for obtaining resources.  Echo game listener could be anything...
-    private Context             context;
+    private final Context             context;
 
     // State of Echo Game.
-    private EchoState           echoState       = EchoState.presenting;
+    private final EchoState           echoState       = EchoState.presenting;
 
     // Sequence of buttons that Echo will present.
-    private List< ButtonColor > buttonSequence  = new ArrayList<>();
+    private final List< ButtonColor > buttonSequence  = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private boolean             flashButtons    = true,
-                                playSounds      = true;
+    private boolean                   flashButtons    = true,
+                                      playSounds      = true;
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
@@ -88,10 +86,10 @@ public class EchoGame {
     private void presentButtonSequence() {
         // Aggregate total delays for next iteration so all iterations do not occur at once.
         long delayNextIteration = 0;
-        long delayMillisFlash   = 0;
+        long delayMillisFlash;
 
         // Delays between button flashes and between starting and stopping a button flash.
-        long delayMillisGap     = 0;
+        long delayMillisGap;
 
         // Total time for whole sequence.
         long delayMillisTotal   = buttonSequence.size() * (
@@ -106,7 +104,7 @@ public class EchoGame {
         echoGameListener.startPresentingSequence();
 
         // Defer stop presenting sequence until after all have transpired.
-        flashHandler.postDelayed( () -> echoGameListener.stopPresentingSequence(), delayMillisTotal );
+        flashHandler.postDelayed( echoGameListener::stopPresentingSequence, delayMillisTotal );
 
         for( ButtonColor buttonColor : buttonSequence ) {
             // Runnables for which button to start and stop flashing for this button in sequence.
@@ -125,24 +123,24 @@ public class EchoGame {
             // Set runnables to start and stop flashing based on color of button in sequence.
             switch( buttonColor ) {
                 case red :
-                    startFlashButton = () -> echoGameListener.startFlashRedButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashRedButton();
+                    startFlashButton = echoGameListener::startFlashRedButton;
+                    stopFlashButton  = echoGameListener::stopFlashRedButton;
                     break;
                 case green :
-                    startFlashButton = () -> echoGameListener.startFlashGreenButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashGreenButton();
+                    startFlashButton = echoGameListener::startFlashGreenButton;
+                    stopFlashButton  = echoGameListener::stopFlashGreenButton;
                     break;
                 case blue :
-                    startFlashButton = () -> echoGameListener.startFlashBlueButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashBlueButton();
+                    startFlashButton = echoGameListener::startFlashBlueButton;
+                    stopFlashButton  = echoGameListener::stopFlashBlueButton;
                     break;
                 case yellow :
-                    startFlashButton = () -> echoGameListener.startFlashYellowButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashYellowButton();
+                    startFlashButton = echoGameListener::startFlashYellowButton;
+                    stopFlashButton  = echoGameListener::stopFlashYellowButton;
                     break;
                 default :
-                    startFlashButton = () -> echoGameListener.startFlashYellowButton();
-                    stopFlashButton  = () -> echoGameListener.stopFlashYellowButton();
+                    startFlashButton = echoGameListener::startFlashBadButton;
+                    stopFlashButton  = echoGameListener::stopFlashBadButton;
             }
 
             // Start flashing the button after barely perceptible delay.  This delay prevents
@@ -169,7 +167,7 @@ public class EchoGame {
         newSequenceHandler.postDelayed( presentNewSequence, delayMillisSequence );
     }
 
-    public void startNewGame() {
+    void startNewGame() {
         buttonSequence.clear();
 
         buttonSequence.add( ButtonColor.getRandom() );
@@ -191,22 +189,22 @@ public class EchoGame {
 
     // Process user taps on buttons.
 
-    public void redButtonTapped() {
+    void redButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void greenButtonTapped() {
+    void greenButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void blueButtonTapped() {
+    void blueButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }
 
-    public void yellowButtonTapped() {
+    void yellowButtonTapped() {
         // Guard against acting on user inputs while presenting.
         if( echoState == EchoState.presenting ) return;
     }

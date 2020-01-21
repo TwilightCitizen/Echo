@@ -24,16 +24,14 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     private EchoGame                  echoGame;
 
     // Colored game buttons.
-    private Button                    buttonRed, buttonGreen, buttonBlue, buttonYellow;
-
     private Button[]                  allButtons;
 
     // Overlays that fake highlighting a button.
-    ImageView overlayFlashRed;
-    ImageView overlayFlashGreen;
-    ImageView overlayFlashBlue;
-    ImageView overlayFlashYellow;
-    ImageView overlaySubdueAll;
+    private ImageView overlayFlashRed;
+    private ImageView overlayFlashGreen;
+    private ImageView overlayFlashBlue;
+    private ImageView overlayFlashYellow;
+    private ImageView overlaySubdueAll;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -58,10 +56,10 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     private void setupButtons() {
         // Obtain handles to all the game buttons.
-        buttonRed    = findViewById( R.id.buttonRed    );
-        buttonGreen  = findViewById( R.id.buttonGreen  );
-        buttonBlue   = findViewById( R.id.buttonBlue   );
-        buttonYellow = findViewById( R.id.buttonYellow );
+        Button buttonRed    = findViewById( R.id.buttonRed    );
+        Button buttonGreen  = findViewById( R.id.buttonGreen  );
+        Button buttonBlue   = findViewById( R.id.buttonBlue   );
+        Button buttonYellow = findViewById( R.id.buttonYellow );
 
         allButtons   = new Button[] { buttonRed, buttonGreen, buttonBlue, buttonYellow };
 

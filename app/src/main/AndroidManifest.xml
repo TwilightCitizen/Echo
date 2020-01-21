@@ -29,7 +29,7 @@
 
         <activity
             android:name=".GameModeActivity"
-            android:label="@string/title_activity_game_mode"></activity>
+            android:label="@string/title_activity_game_mode" />
         <activity
             android:name=".LeaderboardActivity"
             android:label="@string/title_activity_leaderboard" />

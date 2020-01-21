@@ -48,7 +48,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
     }
 
     private void setupButtonUseGoogleAccount() {
-        // Request email and default options during Gogole sign in attempts.
+        // Request email and default options during Google sign in attempts.
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
         ).requestEmail().build();
@@ -125,7 +125,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
         // Confirmation activity to show user success or failure of Google Sign In.
         Intent googleSignInSuccessIntent = new Intent( this, ConfirmationActivity.class );
 
-        // Start the confirmation notification with thes passed in success animation and message.
+        // Start the confirmation notification with the passed in success animation and message.
         googleSignInSuccessIntent.putExtra( ConfirmationActivity.EXTRA_ANIMATION_TYPE, successAnimation );
         googleSignInSuccessIntent.putExtra( ConfirmationActivity.EXTRA_MESSAGE, getString( messageId ) );
         startActivity( googleSignInSuccessIntent );
