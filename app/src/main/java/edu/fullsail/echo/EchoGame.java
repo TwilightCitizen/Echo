@@ -9,9 +9,11 @@ package edu.fullsail.echo;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -55,20 +57,26 @@ public class EchoGame {
     }
 
     // Delegate/Listener the Echo Game requires.
-    private final EchoGameListener    echoGameListener;
+    private final EchoGameListener         echoGameListener;
 
     // Context for obtaining resources.  Echo game listener could be anything...
-    private final Context             context;
+    private final Context                  context;
 
     // State of Echo Game.
-    private final EchoState           echoState       = EchoState.presenting;
+    private       EchoState                echoState      = EchoState.presenting;
 
     // Sequence of buttons that Echo will present.
-    private final List< ButtonColor > buttonSequence  = new ArrayList<>();
+    private final ArrayList< ButtonColor > buttonSequence = new ArrayList<>();
 
     // Flags to indicate whether or not Echo should flash buttons or play sounds when presenting.
-    private boolean                   flashButtons    = true,
-                                      playSounds      = true;
+    private       boolean                  flashButtons   = true,
+                                           playSounds     = true;
+
+    // Index of button in sequence to compare against the user's tap.
+    private       int                      buttonIndex    = 0;
+
+    // Number of sequence steps the user successfully echoed.
+    private       int                      playerScore    = 0;
 
     // Echo Game requires a context, a delegate/listener, and the aforementioned flags.
     public EchoGame(
@@ -104,7 +112,10 @@ public class EchoGame {
         echoGameListener.startPresentingSequence();
 
         // Defer stop presenting sequence until after all have transpired.
-        flashHandler.postDelayed( echoGameListener::stopPresentingSequence, delayMillisTotal );
+        flashHandler.postDelayed( () -> {
+            echoGameListener.stopPresentingSequence();
+            echoState = EchoState.comparing;
+        }, delayMillisTotal );
 
         for( ButtonColor buttonColor : buttonSequence ) {
             // Runnables for which button to start and stop flashing for this button in sequence.
@@ -167,45 +178,43 @@ public class EchoGame {
         newSequenceHandler.postDelayed( presentNewSequence, delayMillisSequence );
     }
 
-    void startNewGame() {
-        buttonSequence.clear();
+    private void compareTapToRemainingSequence( ButtonColor buttonColor ) {
+        // Guard against acting on user inputs while presenting.
+        if( echoState == EchoState.presenting ) return;
 
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
-        buttonSequence.add( ButtonColor.getRandom() );
+        // Button to compare tap against.
+        ButtonColor sequenceButtonColor = buttonSequence.get( buttonIndex );
 
-        addButtonToSequence();
+        // Compare button to one user tapped.
+        if( sequenceButtonColor == buttonColor ) {
+            // It matched.  Increase the compare index.
+            buttonIndex++;
+
+            // See if there are more buttons to compare.
+            if( buttonIndex == buttonSequence.size() ){
+                // Player must have matched the whole sequence.  Increase the score.
+                playerScore++;
+
+                // Then add to the sequence and present it, starting comparisons over.
+                buttonIndex = 0;
+                echoState   = EchoState.presenting;
+                addButtonToSequence();
+            }
+
+            return;
+        }
+
+        // Game is over.  Publish the player's highest score, which could be from the previous round.
+        echoState   = EchoState.presenting;
+
+        Log.d( "Game Over", String.format( "Player Score: %d", playerScore ) );
     }
+
+    void startNewGame()       { addButtonToSequence(); }
 
     // Process user taps on buttons.
-
-    void redButtonTapped() {
-        // Guard against acting on user inputs while presenting.
-        if( echoState == EchoState.presenting ) return;
-    }
-
-    void greenButtonTapped() {
-        // Guard against acting on user inputs while presenting.
-        if( echoState == EchoState.presenting ) return;
-    }
-
-    void blueButtonTapped() {
-        // Guard against acting on user inputs while presenting.
-        if( echoState == EchoState.presenting ) return;
-    }
-
-    void yellowButtonTapped() {
-        // Guard against acting on user inputs while presenting.
-        if( echoState == EchoState.presenting ) return;
-    }
+    void redButtonTapped()    { compareTapToRemainingSequence( ButtonColor.red    ); }
+    void greenButtonTapped()  { compareTapToRemainingSequence( ButtonColor.green  ); }
+    void blueButtonTapped()   { compareTapToRemainingSequence( ButtonColor.blue   ); }
+    void yellowButtonTapped() { compareTapToRemainingSequence( ButtonColor.yellow ); }
 }

@@ -81,6 +81,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
+    // Respond to Echo Game listener events.
     @Override public void startPresentingSequence() { overlaySubdueAll.setVisibility(   View.VISIBLE ); }
     @Override public void startFlashRedButton()     { overlayFlashRed.setVisibility(    View.VISIBLE ); }
     @Override public void stopFlashRedButton()      { overlayFlashRed.setVisibility(    View.GONE    ); }
