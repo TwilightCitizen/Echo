@@ -4,6 +4,10 @@
 
 Echo is a Wear OS 2.0 application, providing an enhanced, modern experience of the popular game Simon.
 
+## Repository Link
+
+[https://github.com/daclark1/Echo](https://github.com/daclark1/Echo)
+
 ## Image and Audio Resources
 
 All image and audio resources were created by me.
@@ -65,3 +69,6 @@ Obtaining the SHA-1 hash proved difficult according to the provided instructions
     - May need some polish.  Maybe not.  Turned out much simpler than expected.
     - Players have no more than 3 seconds between taps before Echo call's game over.
     - No need for Ambient Mode.
+    
+## Known Issues and Bugs
+- The yellow back button that appears after game over appears beneath the bad button tap overlay.  Nothing seems to work to fix this.  Changes in elevation, order of declaration in the layout, or even calling sendToFront in code do nothing.  It still works, but it looks off.
