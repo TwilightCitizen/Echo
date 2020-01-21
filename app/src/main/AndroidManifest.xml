@@ -28,7 +28,7 @@
             android:value="true" />
 
         <activity
-            android:name=".GameModeActivity"
+            android:name=".GameOptionsActivity"
             android:label="@string/title_activity_game_mode" />
         <activity
             android:name=".LeaderboardActivity"

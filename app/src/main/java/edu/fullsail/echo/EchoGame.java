@@ -49,6 +49,8 @@ public class EchoGame {
         void startPlayYellowTune();
         void startPlayBadTune();
         void startPlayGoodTune();
+
+        void gameOver( int finalScore );
     }
 
     // States that Echo Game can be in.
@@ -239,10 +241,10 @@ public class EchoGame {
     }
 
     private void notifyGameOver() {
-        // Game is over.  Publish the player's highest score, which could be from the previous round.
-        echoState   = EchoState.presenting;
+        // Game is over.  Notify listener with player's final score.
+        echoState  = EchoState.presenting;
 
-        Log.d( "Final Score", String.format( "%d", playerScore ) );
+        echoGameListener.gameOver( playerScore );
     }
 
     private void flashAndPlayGoodButton() {

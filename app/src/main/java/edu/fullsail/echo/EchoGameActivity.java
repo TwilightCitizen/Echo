@@ -17,8 +17,11 @@ import android.widget.ImageView;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class EchoGameActivity extends WearableActivity implements EchoGame.EchoGameListener {
-    // Game Mode and Google Account obtained from calling activity.
-    private GameModeActivity.GameMode gameMode            = GameModeActivity.GameMode.seeAndHear;
+    // Game options obtained from calling activity.
+    private boolean                   flashButtons;
+    private boolean                   playSounds;
+
+    // Google Account obtained from calling activity.
     private GoogleSignInAccount       googleSignInAccount = null;
 
     // Echo Game maintains the game logic to which this activity responds.
@@ -44,7 +47,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         setContentView( R.layout.activity_echo_game );
         setAmbientEnabled();
         getGoogleSignInAccount();
-        getGameMode();
+        getGameOptions();
         setupButtons();
         setupMediaPlayers();
         setupOverlays();
@@ -61,9 +64,10 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         googleSignInAccount = getIntent().getParcelableExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT );
     }
 
-    private void getGameMode() {
-        // Get the Game Mode passed from the calling activity.
-        gameMode = GameModeActivity.GameMode.values()[ getIntent().getIntExtra( GameModeActivity.GAME_MODE, 0 ) ];
+    private void getGameOptions() {
+        // Get the game options passed from the calling activity.
+        flashButtons = getIntent().getBooleanExtra( GameOptionsActivity.FLASH_BUTTONS, true );
+        playSounds   = getIntent().getBooleanExtra( GameOptionsActivity.PLAY_SOUNDS,   true );
     }
 
     private void setupMediaPlayers() {
@@ -114,22 +118,22 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
         // Forward their taps to the Echo Game's handlers.
         buttonRed.setOnClickListener(    ( View v ) -> {
-            playMediaFromStart( mediaButtonPressRed );
+            if( playSounds ) playMediaFromStart( mediaButtonPressRed );
             echoGame.redButtonTapped();
         } );
 
         buttonGreen.setOnClickListener(  ( View v ) -> {
-            playMediaFromStart( mediaButtonPressGreen );
+            if( playSounds ) playMediaFromStart( mediaButtonPressGreen );
             echoGame.greenButtonTapped();
         } );
 
         buttonBlue.setOnClickListener(   ( View v ) -> {
-            playMediaFromStart( mediaButtonPressBlue );
+            if( playSounds ) playMediaFromStart( mediaButtonPressBlue );
             echoGame.blueButtonTapped();
         } );
 
         buttonYellow.setOnClickListener( ( View V ) -> {
-            playMediaFromStart( mediaButtonPressYellow );
+            if( playSounds ) playMediaFromStart( mediaButtonPressYellow );
             echoGame.yellowButtonTapped();
         } );
     }
@@ -147,7 +151,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     private void setupEchoGame() {
         // Setup and start a game of Echo.
-        echoGame = new EchoGame( this, this, gameMode.getFlashesButtons(), gameMode.getPlaysSounds() );
+        echoGame = new EchoGame( this, this, flashButtons, playSounds );
 
         echoGame.startNewGame();
     }
@@ -175,4 +179,8 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void startPlayYellowTune()     { playMediaFromStart( mediaButtonPressYellow     ); }
     @Override public void startPlayBadTune()        { playMediaFromStart( mediaButtonPressBad        ); }
     @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood       ); }
+
+    @Override public void gameOver( int finalScore ) {
+
+    }
 }

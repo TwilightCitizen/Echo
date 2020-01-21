@@ -67,7 +67,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
     private void setupButtonUseGuestAccount() {
         // Button and intent for Game Mode activity navigation.
         Button useGuestAccountButton = findViewById( R.id.buttonUseGuestAccount );
-        Intent gameModeIntent        = new Intent( this, GameModeActivity.class );
+        Intent gameModeIntent        = new Intent( this, GameOptionsActivity.class );
 
         useGuestAccountButton.setOnClickListener( ( View v ) -> {
             // Navigate directly to the Game Mode activity.
@@ -94,7 +94,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
             // Attempt to obtain the authenticated account from the completed Google Sign In task.
             GoogleSignInAccount googleSignInAccount    = googleSignInAccountTask.getResult( ApiException.class );
             // Intent for Game Mode activity.
-            Intent              gameModeIntent         = new Intent( this, GameModeActivity.class );
+            Intent              gameModeIntent         = new Intent( this, GameOptionsActivity.class );
 
             // Runnable to transition to Game Mode activity after delay so that notification of
             // successful Google Sign In remains on screen long enough for the user to see it.

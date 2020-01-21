@@ -6,35 +6,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GameModeActivity" >
+    tools:context=".GameOptionsActivity" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom|clip_horizontal|center|start"
-        android:layout_weight="1"
+        android:layout_weight="1.25 "
         android:background="@color/blue_dark"
         android:orientation="horizontal">
 
-        <SeekBar
-            android:id="@+id/seekBarGameMode"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+        <ToggleButton
+            android:id="@+id/toggleFlashButtons"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="bottom|start"
-            android:layout_marginStart="32dp"
-            android:layout_marginBottom="8dp"
-            android:max="2"
-            android:progress="0" />
+            android:layout_marginStart="38dp"
+            android:background="@drawable/toggle_button"
+            android:checked="true"
+            android:textOff=""
+            android:textOn="" />
 
         <TextView
-            android:id="@+id/textGameMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="14dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/see_hear" />
+            android:text="@string/flash_buttons" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.25"
+        android:background="@color/blue_dark"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/togglePlayTunes"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center|start"
+            android:layout_marginStart="38dp"
+            android:background="@drawable/toggle_button"
+            android:checked="true"
+            android:textOff=""
+            android:textOn="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/play_tunes" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,4 +87,5 @@
             android:layout_marginEnd="32dp"
             android:text="@string/start_game" />
     </LinearLayout>
+
 </LinearLayout>

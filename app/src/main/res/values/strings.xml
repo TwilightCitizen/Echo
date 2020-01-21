@@ -19,8 +19,7 @@
     <string name="title_activity_leaderboard">LeaderboardActivity</string>
     <string name="title_activity_game_mode">GameModeActivity</string>
     <string name="start_game">Start Game</string>
-    <string name="see_hear">See &amp; Hear</string>
-    <string name="see_only">See Only</string>
-    <string name="hear_only">Hear Only</string>
+    <string name="flash_buttons">Flash Buttons</string>
+    <string name="play_tunes">Play Tunes</string>
     <string name="button_overlay">Button Overlay</string>
 </resources>
