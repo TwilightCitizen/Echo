@@ -25,19 +25,13 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     private EchoGame                  echoGame;
 
     // Overlays that fake highlighting a button.
-    private ImageView                 overlayFlashRed,
-                                      overlayFlashGreen,
-                                      overlayFlashBlue,
-                                      overlayFlashYellow,
-                                      overlaySubdueAll;
+    private ImageView                 overlayFlashRed,    overlayFlashGreen, overlayFlashBlue,
+                                      overlayFlashYellow, overlaySubdueAll,  overlayFlashGood,
+                                      overlayFlashBad;
 
     // Media players for MIDI sound bites.
-    private MediaPlayer               mediaButtonPressBad,
-                                      mediaButtonPressGood,
-                                      mediaButtonPressRed,
-                                      mediaButtonPressGreen,
-                                      mediaButtonPressBlue,
-                                      mediaButtonPressYellow;
+    private MediaPlayer               mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
+                                      mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow;
 
     // All media players aggregated for batch changes.
     private MediaPlayer[]             mediaPlayers;
@@ -147,6 +141,8 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         overlayFlashBlue   = findViewById( R.id.imageBlueFlash   );
         overlayFlashYellow = findViewById( R.id.imageYellowFlash );
         overlaySubdueAll   = findViewById( R.id.imageSubdueAll   );
+        overlayFlashGood   = findViewById( R.id.imageGoodFlash   );
+        overlayFlashBad    = findViewById( R.id.imageBadFlash    );
     }
 
     private void setupEchoGame() {
@@ -168,15 +164,15 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void stopFlashBlueButton()     { overlayFlashBlue.setVisibility(   View.GONE    ); }
     @Override public void startFlashYellowButton()  { overlayFlashYellow.setVisibility( View.VISIBLE ); }
     @Override public void stopFlashYellowButton()   { overlayFlashYellow.setVisibility( View.GONE    ); }
-    @Override public void startFlashBadButton()     { }
-    @Override public void stopFlashBadButton()      { }
-    @Override public void startFlashGoodButton()    { }
-    @Override public void stopFlashGoodButton()     { }
+    @Override public void startFlashBadButton()     { overlayFlashBad.setVisibility(    View.VISIBLE ); }
+    @Override public void stopFlashBadButton()      { overlayFlashBad.setVisibility(    View.GONE    ); }
+    @Override public void startFlashGoodButton()    { overlayFlashGood.setVisibility(   View.VISIBLE ); }
+    @Override public void stopFlashGoodButton()     { overlayFlashGood.setVisibility(   View.GONE    ); }
 
-    @Override public void startPlayRedTune()        { playMediaFromStart( mediaButtonPressRed    ); }
-    @Override public void startPlayGreenTune()      { playMediaFromStart( mediaButtonPressGreen  ); }
-    @Override public void startPlayBlueTune()       { playMediaFromStart( mediaButtonPressBlue   ); }
-    @Override public void startPlayYellowTune()     { playMediaFromStart( mediaButtonPressYellow ); }
-    @Override public void startPlayBadTune()        { playMediaFromStart( mediaButtonPressBad    ); }
-    @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood   ); }
+    @Override public void startPlayRedTune()        { playMediaFromStart( mediaButtonPressRed        ); }
+    @Override public void startPlayGreenTune()      { playMediaFromStart( mediaButtonPressGreen      ); }
+    @Override public void startPlayBlueTune()       { playMediaFromStart( mediaButtonPressBlue       ); }
+    @Override public void startPlayYellowTune()     { playMediaFromStart( mediaButtonPressYellow     ); }
+    @Override public void startPlayBadTune()        { playMediaFromStart( mediaButtonPressBad        ); }
+    @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood       ); }
 }

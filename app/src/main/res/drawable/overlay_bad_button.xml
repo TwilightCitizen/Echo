@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="rectangle"
+            android:gravity="center">
+
+            <solid android:color="@color/grey_trans" />
+
+            <size
+                android:width="200dp"
+                android:height="200dp" />
+        </shape>
+    </item>
+
+    <item
+        android:height="64dp"
+        android:width="64dp"
+        android:gravity="center">
+
+        <shape
+            android:shape="oval"
+            android:gravity="center">
+
+            <solid android:color="@color/red_normal" />
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/icon_bad_button"
+        android:width="48dp"
+        android:height="48dp"
+        android:gravity="center" />
+</layer-list>

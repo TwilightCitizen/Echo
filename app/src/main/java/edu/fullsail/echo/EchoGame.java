@@ -199,7 +199,8 @@ public class EchoGame {
         final int  delaySecondsSequence = context.getResources().getInteger( R.integer.sequence_delay_seconds );
         final long delayMillisSequence  = TimeUnit.SECONDS.toMillis( delaySecondsSequence );
 
-        // Present the new sequence after a delay.
+        // Remove the good button flash and present the new sequence after a delay.
+        newSequenceHandler.postDelayed( echoGameListener::stopFlashGoodButton, delayMillisSequence );
         newSequenceHandler.postDelayed( presentNewSequence, delayMillisSequence );
     }
 
