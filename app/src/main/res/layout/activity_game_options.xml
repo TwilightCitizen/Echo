@@ -32,7 +32,8 @@
             android:layout_gravity="bottom|start"
             android:layout_marginStart="14dp"
             android:layout_marginEnd="32dp"
-            android:text="@string/flash_buttons" />
+            android:text="@string/flash_buttons"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +60,8 @@
             android:layout_gravity="center|start"
             android:layout_marginStart="14dp"
             android:layout_marginEnd="32dp"
-            android:text="@string/play_tunes" />
+            android:text="@string/play_tunes"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,7 +87,8 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:text="@string/start_game" />
+            android:text="@string/start_game"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </LinearLayout>
