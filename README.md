@@ -57,7 +57,6 @@ Obtaining the SHA-1 hash proved difficult according to the provided instructions
 
 - Memory Game with 3 Modes of Play (See & Hear, See Only, and Hear Only)
     - 99.9% Complete
-    - Just needs some polish.
     - Hear Only is seriously difficult!  I can hardly get 1 or 2 correct.
 - Guest Game Play or Authenticated Game Play with Score Persistence to Leaderboard
     - 35% Complete
@@ -66,7 +65,6 @@ Obtaining the SHA-1 hash proved difficult according to the provided instructions
     - Score Persistent to Leaderboard is next major lift.
 - Intelligent Pause, Resume, and/or Reset Based on Time Spent in Orientation
     - 99.9% Complete
-    - May need some polish.  Maybe not.  Turned out much simpler than expected.
     - Players have no more than 3 seconds between taps before Echo call's game over.
     - No need for Ambient Mode.
     
