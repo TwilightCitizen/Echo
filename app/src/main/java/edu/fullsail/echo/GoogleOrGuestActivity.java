@@ -35,7 +35,7 @@ and upon failure, navigation to the Game Mode activity is halted.
 */
 public class GoogleOrGuestActivity extends WearableActivity {
     // Google Sign In request code.
-    private static final int    REQUEST_GOOGLE_SIGN_IN = 1;
+    private static final int    REQUEST_GOOGLE_SIGN_IN = 10;
     // Google Account tag for passing authenticated account to Game Mode activity.
     public  static final String GOOGLE_SIGN_IN_ACCOUNT = "GOOGLE_SIGN_IN_ACCOUNT";
 
@@ -69,16 +69,18 @@ public class GoogleOrGuestActivity extends WearableActivity {
         Intent gameModeIntent        = new Intent( this, GameOptionsActivity.class );
 
         useGuestAccountButton.setOnClickListener( ( View v ) -> {
-            // Navigate directly to the Game Mode activity.
+            // Start the Game Options activity with a custom transition.  Finish afterward so Google
+            // or Guest Activity is removed from back stack.
             startActivity( gameModeIntent );
             overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            finish();
         } );
     }
 
     @Override protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         super.onActivityResult( requestCode, resultCode, data );
 
-        // Guard against requests other than Google Sign In.
+        // Guard against non-Google Sign In request.
         if( requestCode != REQUEST_GOOGLE_SIGN_IN ) return;
 
         // Obtain asynchronous task in which Google Sign In activity authenticates user.
@@ -92,14 +94,17 @@ public class GoogleOrGuestActivity extends WearableActivity {
         try {
             // Attempt to obtain the authenticated account from the completed Google Sign In task.
             GoogleSignInAccount googleSignInAccount    = googleSignInAccountTask.getResult( ApiException.class );
-            // Intent for Game Mode activity.
-            Intent              gameModeIntent         = new Intent( this, GameOptionsActivity.class );
+            // Intent for Game Options activity.
+            Intent              gameOptionsIntent      = new Intent( this, GameOptionsActivity.class );
 
-            // Runnable to transition to Game Mode activity after delay so that notification of
+            // Runnable to transition to Game Options activity after delay so that notification of
             // successful Google Sign In remains on screen long enough for the user to see it.
             Runnable            transitionNotification = () -> {
-                startActivity( gameModeIntent );
+                // Start the Game Options activity with a custom transition.  Finish afterward so Google
+                // or Guest Activity is removed from back stack.
+                startActivity( gameOptionsIntent );
                 overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                finish();
             };
 
             // Handler and delay for Game Mode activity transition.
@@ -110,7 +115,7 @@ public class GoogleOrGuestActivity extends WearableActivity {
             // Notify the user of successful Google Sign in, pass the authenticated Google account
             // to the Game Mode activity, and navigate to it after a brief delay.
             notifyGoogleSignInSuccess( ConfirmationActivity.SUCCESS_ANIMATION, R.string.successful_google_sign_in );
-            gameModeIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
+            gameOptionsIntent.putExtra( GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
             transitionHandler.postDelayed( transitionNotification, delayMillis );
 
         } catch( ApiException e ) {

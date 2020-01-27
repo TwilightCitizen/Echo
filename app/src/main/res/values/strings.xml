@@ -3,26 +3,34 @@
 <resources>
     <string name="app_name">Echo</string>
     <string name="echo_logo">Echo Logo</string>
-    <string name="title_activity_game_or_leaderboard">GameOrLeaderboardActivity</string>
+
     <string name="icon_start_new_game">Start New Game Icon</string>
     <string name="icon_view_leaderboard">View Leaderboard Icon</string>
     <string name="view_leaderboard">View the Leaderboard</string>
     <string name="start_new_game">Start a New Game</string>
-    <string name="title_activity_google_or_guest">GoogleOrGuestActivity</string>
+
     <string name="icon_use_guest_account">Use Guest Account Icon</string>
     <string name="icon_use_google_account">Use Google Account Icon</string>
     <string name="use_google_account">Use Google Account</string>
     <string name="continue_as_guest">Continue as Guest</string>
-    <string name="title_activity_echo_game">EchoGameActivity</string>
+
     <string name="successful_google_sign_in">Successfully Signed into Google</string>
     <string name="failed_google_sign_in">Failed to Sign into Google</string>
-    <string name="title_activity_leaderboard">LeaderboardActivity</string>
-    <string name="title_activity_game_mode">GameModeActivity</string>
+
     <string name="start_game">Start Game</string>
     <string name="flash_buttons">Flash Buttons</string>
     <string name="play_tunes">Play Tunes</string>
+
     <string name="button_overlay">Button Overlay</string>
+
     <string name="game_over">GAME OVER!</string>
     <string name="final_score">FINAL SCORE: %d</string>
     <string name="leaders">Leaders</string>
+
+    <string name="title_activity_game_or_leaderboard">GameOrLeaderboardActivity</string>
+    <string name="title_activity_google_or_guest">GoogleOrGuestActivity</string>
+    <string name="title_activity_leaderboard">LeaderboardActivity</string>
+    <string name="title_activity_game_mode">GameModeActivity</string>
+    <string name="title_activity_echo_game">EchoGameActivity</string>
+    <string name="title_activity_game_over">GameOverActivity</string>
 </resources>

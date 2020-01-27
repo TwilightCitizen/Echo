@@ -285,4 +285,7 @@ public class EchoGame {
     void greenButtonTapped()  { compareTapToRemainingSequence( ButtonColor.green  ); }
     void blueButtonTapped()   { compareTapToRemainingSequence( ButtonColor.blue   ); }
     void yellowButtonTapped() { compareTapToRemainingSequence( ButtonColor.yellow ); }
+
+    // Process user quitting mid game.
+    void userQuit()           { stopGameOverTimer();   }
 }

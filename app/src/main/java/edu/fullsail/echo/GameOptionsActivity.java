@@ -79,8 +79,11 @@ public class GameOptionsActivity extends WearableActivity {
             // Pass game options AFTER click.  Google Account cannot change, but game options can.
             echoGameIntent.putExtra( FLASH_BUTTONS, toggleFlashButtons.isChecked() );
             echoGameIntent.putExtra( PLAY_SOUNDS,   togglePlaySounds.isChecked()   );
-            startActivity( echoGameIntent );
+            // Start the Echo Game activity with a custom transition.  Finish after to remove from
+            // back navigation.
+            startActivityForResult( echoGameIntent, 1 );
             overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            finish();
         } );
     }
 }

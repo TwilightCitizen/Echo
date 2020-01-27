@@ -7,13 +7,13 @@ C20200101
 
 package edu.fullsail.echo;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -23,6 +23,9 @@ activity and starts the game.  It sets itself as Echo Game's delegate/listener a
 Echo Game events, also sending buttons taps to Echo Game when they occur.
 */
 public class EchoGameActivity extends WearableActivity implements EchoGame.EchoGameListener {
+    // Tags for passing the final score to the Game Over activity.
+    public static final String  FINAL_SCORE         = "FINAL_SCORE";
+
     // Game options obtained from calling activity.
     private boolean             flashButtons;
     private boolean             playSounds;
@@ -61,6 +64,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        echoGame.userQuit();
         releaseMediaPlayers();
     }
 
@@ -86,8 +90,8 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
 
         // Collect all the media players.
         mediaPlayers = new MediaPlayer[] {
-                mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
-                mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow
+            mediaButtonPressBad,   mediaButtonPressGood, mediaButtonPressRed,
+            mediaButtonPressGreen, mediaButtonPressBlue, mediaButtonPressYellow
         };
 
         // False start all the media players so they can play from start over each other.
@@ -161,6 +165,12 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         echoGame.startNewGame();
     }
 
+    @Override protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
+        super.onActivityResult( requestCode, resultCode, data );
+        // User left the Game Over activity which overlays this one.  Leave this one, too.
+        finish();
+    }
+
     // Respond to Echo Game listener events.
     @Override public void startPresentingSequence() { overlaySubdueAll.setVisibility(   View.VISIBLE ); }
     @Override public void stopPresentingSequence()  { overlaySubdueAll.setVisibility(   View.GONE    ); }
@@ -186,21 +196,15 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void startPlayGoodTune()       { playMediaFromStart( mediaButtonPressGood       ); }
 
     @Override public void gameOver( int finalScore ) {
-        // Get handles to the game over and final score text fields.
-        TextView textGameOver   = findViewById( R.id.textGameOver   );
-        TextView textFinalScore = findViewById( R.id.textFinalScore );
-        // Get handle to the go back button.
-        Button   buttonGoBack   = findViewById( R.id.buttonGoBack  );
+        // Intent to start the Game Over activity.
+        Intent gameOverIntent = new Intent( this, GameOverActivity.class );
 
-        // Show the game over and final score text fields and the go back button,.
-        textGameOver.setVisibility(   View.VISIBLE );
-        textFinalScore.setVisibility( View.VISIBLE );
-        buttonGoBack.setVisibility(   View.VISIBLE );
+        // Pass the final score to the Game Over activity.
+        gameOverIntent.putExtra( FINAL_SCORE, finalScore );
 
-        // Set the final score text to show the player's final score.
-        textFinalScore.setText( String.format( getString( R.string.final_score ), finalScore ) );
-
-        // Set the go back button listener to dismiss the finished game.
-        buttonGoBack.setOnClickListener( ( View v ) -> finish() );
+        // Start the Game Over activity with a custom transition.  Request code does not matter because
+        // it will be ignored when sent back from the Game Over activity which overlays this one.
+        startActivityForResult( gameOverIntent, 1 );
+        overridePendingTransition( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
     }
 }
