@@ -184,7 +184,7 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
     @Override public void startFlashYellowButton()  { overlayFlashYellow.setVisibility( View.VISIBLE ); }
     @Override public void stopFlashYellowButton()   { overlayFlashYellow.setVisibility( View.GONE    ); }
     @Override public void startFlashBadButton()     { overlayFlashBad.setVisibility(    View.VISIBLE ); }
-    @Override public void stopFlashBadButton()      { overlayFlashBad.setVisibility(    View.GONE    ); }
+    //@Override public void stopFlashBadButton()      { overlayFlashBad.setVisibility(    View.GONE    ); }
     @Override public void startFlashGoodButton()    { overlayFlashGood.setVisibility(   View.VISIBLE ); }
     @Override public void stopFlashGoodButton()     { overlayFlashGood.setVisibility(   View.GONE    ); }
 
@@ -199,8 +199,9 @@ public class EchoGameActivity extends WearableActivity implements EchoGame.EchoG
         // Intent to start the Game Over activity.
         Intent gameOverIntent = new Intent( this, GameOverActivity.class );
 
-        // Pass the final score to the Game Over activity.
+        // Pass the final score and any authenticated Google Account to the Game Over activity.
         gameOverIntent.putExtra( FINAL_SCORE, finalScore );
+        gameOverIntent.putExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT, googleSignInAccount );
 
         // Start the Game Over activity with a custom transition.  Request code does not matter because
         // it will be ignored when sent back from the Game Over activity which overlays this one.

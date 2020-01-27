@@ -36,7 +36,7 @@ public class EchoGame {
         void startFlashYellowButton();
         void stopFlashYellowButton();
         void startFlashBadButton();
-        void stopFlashBadButton();
+        //void stopFlashBadButton();
         void startFlashGoodButton();
         void stopFlashGoodButton();
 

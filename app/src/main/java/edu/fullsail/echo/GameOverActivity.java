@@ -13,14 +13,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 public class GameOverActivity extends Activity {
     // Final score for the user.
     private int finalScore;
+
+    // Google Account obtained from calling activity.
+    private GoogleSignInAccount googleSignInAccount = null;
 
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_game_over );
         getFinalScore();
+        getGoogleSignInAccount();
         gameOver();
     }
 
@@ -29,9 +35,13 @@ public class GameOverActivity extends Activity {
         finalScore = getIntent().getIntExtra( EchoGameActivity.FINAL_SCORE, 0 );
     }
 
+    private void getGoogleSignInAccount() {
+        // Get any authenticated Google Account passed from the calling activity.
+        googleSignInAccount = getIntent().getParcelableExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT );
+    }
+
     private void gameOver() {
         // Get handles to the game over and final score text fields.
-        TextView textGameOver   = findViewById( R.id.textGameOver   );
         TextView textFinalScore = findViewById( R.id.textFinalScore );
         // Get handle to the go back button.
         Button buttonGoBack   = findViewById( R.id.buttonGoBack  );
