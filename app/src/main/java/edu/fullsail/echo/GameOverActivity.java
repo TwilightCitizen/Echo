@@ -9,25 +9,12 @@ package edu.fullsail.echo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GameOverActivity extends Activity {
     // Final score for the user.
@@ -41,8 +28,8 @@ public class GameOverActivity extends Activity {
         setContentView( R.layout.activity_game_over );
         getFinalScore();
         getGoogleSignInAccount();
-        gameOver();
         publishScoreToLeaderboard();
+        gameOver();
     }
 
     private void getFinalScore() {
@@ -53,6 +40,11 @@ public class GameOverActivity extends Activity {
     private void getGoogleSignInAccount() {
         // Get any authenticated Google Account passed from the calling activity.
         googleSignInAccount = getIntent().getParcelableExtra( GoogleOrGuestActivity.GOOGLE_SIGN_IN_ACCOUNT );
+    }
+
+    private void publishScoreToLeaderboard() {
+        if( googleSignInAccount != null )
+            EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore );
     }
 
     private void gameOver() {
@@ -66,47 +58,5 @@ public class GameOverActivity extends Activity {
 
         // Set the go back button listener to dismiss the finished game.
         buttonGoBack.setOnClickListener( ( View v ) -> finish() );
-    }
-
-    private void publishScoreToLeaderboard() {
-        // Guard against publishing the score of a guest user.
-        if( googleSignInAccount == null ) return;
-
-        try {
-            // Initialize Firebase and get Cloud Firestore instance.
-            FirebaseApp.initializeApp( this );
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
-            // Create a new entry for the leaderboard.
-            Map< String, Object > leaderboardEntry = new HashMap<>();
-
-            leaderboardEntry.put( "DISPLAY_NAME", googleSignInAccount.getDisplayName() );
-            leaderboardEntry.put( "FINAL_SCORE",  finalScore );
-
-            firebaseFirestore
-                .collection( "LEADERBOARD" )
-                .document( googleSignInAccount.getId() )
-                .set( leaderboardEntry )
-                .addOnSuccessListener( ( Void aVoid ) -> {
-                    Log.wtf( "LEADERBOARD ENTRY WRITTEN", "" );
-                } ).addOnFailureListener( ( @NonNull Exception e ) -> {
-                    Log.wtf( "LEADERBOARD ENTRY FAILED", e.getLocalizedMessage() );
-                }
-            );
-
-            firebaseFirestore.collection( "LEADERBOARD" ).get()
-                .addOnCompleteListener( ( @NonNull Task< QuerySnapshot > task ) -> {
-                    if ( task.isSuccessful() ) {
-                        for ( QueryDocumentSnapshot document : task.getResult() ) {
-                            Log.wtf( "LEADERBOARD", document.getId() + " => " + document.getData() );
-                        }
-                    } else {
-                        Log.wtf( "ERROR", "Error getting documents.", task.getException() );
-                    }
-                } );
-        } catch( Exception e ) {
-            Log.wtf( "ERROR", e.getLocalizedMessage() );
-        }
     }
 }
