@@ -44,7 +44,11 @@ class EchoLeaderboard {
     }
 
     public interface OnGotTopLimitLeadersListener {
-        void onGotTopLimitleaders( Map< String, Integer > topLimitLeaders );
+        void onGotTopLimitLeaders( Map< String, Integer > topLimitLeaders );
+    }
+
+    public interface OnFailedTopLimitLeadersListener {
+        void onFailedTopLimitLeaders( Exception e );
     }
 
     void publishScoreToLeaderboard( Context context, GoogleSignInAccount googleSignInAccount, int finalScore ) {
@@ -80,7 +84,7 @@ class EchoLeaderboard {
                 if( existingScoreBeatsNewScore( documentSnapshot, finalScore ) ) return;
 
                 // Otherwise, update the leaderboard.
-                updateExisingLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
+                updateExistingLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
             } )
 
             .addOnFailureListener( ( @NonNull Exception e ) -> {
@@ -113,7 +117,7 @@ class EchoLeaderboard {
             .addOnFailureListener( ( @NonNull Exception e ) ->  Log.wtf( "LEADERBOARD WRITE FAILED", e.getLocalizedMessage() ) );
     }
 
-    private void updateExisingLeaderboardEntry(
+    private void updateExistingLeaderboardEntry(
         FirebaseFirestore firebaseFirestore, String googleSignInId, String displayName, int finalScore
     ) {
         // Otherwise, update the leaderboard.
@@ -125,7 +129,12 @@ class EchoLeaderboard {
             .addOnFailureListener( ( @NonNull Exception e ) -> Log.wtf( "LEADERBOARD UPDATE FAILED", e.getLocalizedMessage() ) );
     }
 
-    void getTopLimitLeaders( Context context, int limit, OnGotTopLimitLeadersListener onGotTopLimitLeadersListener ) {
+    void getTopLimitLeaders(
+        Context                         context,
+        int                             limit,
+        OnGotTopLimitLeadersListener    onGotTopLimitLeadersListener,
+        OnFailedTopLimitLeadersListener onFailedTopLimitLeadersListener
+    ) {
         // Top limit leaders on the leaderboard, if any.
         Map< String, Integer > topLimitLeaders = new HashMap<>();
 
@@ -151,11 +160,9 @@ class EchoLeaderboard {
                 }
 
                 // Notify the caller that the top limit leaders were retrieved.
-                onGotTopLimitLeadersListener.onGotTopLimitleaders( topLimitLeaders );
+                onGotTopLimitLeadersListener.onGotTopLimitLeaders( topLimitLeaders );
             } )
 
-            .addOnFailureListener( ( @NonNull Exception e ) -> {
-                // TODO: Handle Failure Here
-            } );
+            .addOnFailureListener( onFailedTopLimitLeadersListener::onFailedTopLimitLeaders );
     }
 }
