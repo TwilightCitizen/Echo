@@ -17,15 +17,13 @@ Leaderboard activity will show players' top scores, sorted from highest to lowes
 obtained by a Firebase database.  Presently, functionality just displays an empty activity so
 navigation could be stubbed out.
 */
-public class LeaderboardActivity extends WearableActivity implements EchoLeaderboard.EchoLeaderboardListener {
+public class LeaderboardActivity extends WearableActivity {
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_leaderboard );
 
-        EchoLeaderboard.getInstance().getTopLimitLeaders( this );
-    }
+        EchoLeaderboard.getInstance().getTopLimitLeaders( this, 100, ( Map< String, Integer > topLimitLeaders ) -> {
 
-    @Override public void onGotTopLimitleaders( Map< String, Integer > topLimitLeaders ) {
-
+        } );
     }
 }

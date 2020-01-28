@@ -31,7 +31,6 @@ class EchoLeaderboard {
     private static final String            DISPLAY_NAME      = "DISPLAY_NAME";
     private static final String            FINAL_SCORE       = "FINAL_SCORE";
     private static final String            LEADERBOARD       = "LEADERBOARD";
-    private static final int               LIMIT             = 100;
 
     // Private constructor prevents instantiation.
     private EchoLeaderboard() {}
@@ -44,7 +43,7 @@ class EchoLeaderboard {
         return instance;
     }
 
-    public interface EchoLeaderboardListener {
+    public interface OnGotTopLimitLeadersListener {
         void onGotTopLimitleaders( Map< String, Integer > topLimitLeaders );
     }
 
@@ -126,10 +125,7 @@ class EchoLeaderboard {
             .addOnFailureListener( ( @NonNull Exception e ) -> Log.wtf( "LEADERBOARD UPDATE FAILED", e.getLocalizedMessage() ) );
     }
 
-    public void getTopLimitLeaders( Context context ) {
-        // Guard against context not being an EchoLeaderboardListener
-        if( !( context instanceof EchoLeaderboardListener ) ) return;
-
+    void getTopLimitLeaders( Context context, int limit, OnGotTopLimitLeadersListener onGotTopLimitLeadersListener ) {
         // Top limit leaders on the leaderboard, if any.
         Map< String, Integer > topLimitLeaders = new HashMap<>();
 
@@ -142,7 +138,7 @@ class EchoLeaderboard {
         firebaseFirestore
             .collection( LEADERBOARD )
             .orderBy( FINAL_SCORE, Query.Direction.DESCENDING )
-            .limit( LIMIT )
+            .limit( limit )
             .get()
 
             .addOnSuccessListener( ( QuerySnapshot queryDocumentSnapshots ) -> {
@@ -155,7 +151,7 @@ class EchoLeaderboard {
                 }
 
                 // Notify the caller that the top limit leaders were retrieved.
-                ( (EchoLeaderboardListener) context ).onGotTopLimitleaders( topLimitLeaders );
+                onGotTopLimitLeadersListener.onGotTopLimitleaders( topLimitLeaders );
             } )
 
             .addOnFailureListener( ( @NonNull Exception e ) -> {
