@@ -13,10 +13,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +31,10 @@ class EchoLeaderboard {
     private static final String            DISPLAY_NAME      = "DISPLAY_NAME";
     private static final String            FINAL_SCORE       = "FINAL_SCORE";
     private static final String            LEADERBOARD       = "LEADERBOARD";
+    private static final int               LIMIT             = 100;
 
     // Private constructor prevents instantiation.
-    private EchoLeaderboard() {};
+    private EchoLeaderboard() {}
 
     // Return the singleton instance, instantiating as needed, also initializing the Firebase
     // instance that this will use.
@@ -39,6 +42,10 @@ class EchoLeaderboard {
         if( instance == null ) instance = new EchoLeaderboard();
 
         return instance;
+    }
+
+    public interface EchoLeaderboardListener {
+        void onGotTopLimitleaders( Map< String, Integer > topLimitLeaders );
     }
 
     void publishScoreToLeaderboard( Context context, GoogleSignInAccount googleSignInAccount, int finalScore ) {
@@ -52,56 +59,107 @@ class EchoLeaderboard {
         // Guard against no Google Sign In account ID.
         if( googleSignInId == null ) return;
 
-        try {
-            // Initialize Firebase and get the Cloud Firestore instance.
-            FirebaseApp.initializeApp( context );
+        // Initialize Firebase and get the Cloud Firestore instance.
+        FirebaseApp.initializeApp( context );
 
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-            firebaseFirestore.collection( LEADERBOARD )
-                .document( googleSignInId )
-                .get()
-                .addOnCompleteListener( ( @NonNull Task< DocumentSnapshot > task ) -> {
-                    if( task.isSuccessful() ) {
-                        DocumentSnapshot retrievedLeaderBoardEntry = task.getResult();
+        // Get any leaderboard entry for the signed in user.
+        firebaseFirestore.collection( LEADERBOARD )
+            .document( googleSignInId )
+            .get()
 
-                        if( retrievedLeaderBoardEntry == null ) return;
+            .addOnSuccessListener( ( DocumentSnapshot documentSnapshot ) -> {
+                // Create the leaderboard entry if it does not exist.
+                if( !documentSnapshot.exists() ) {
+                    publishNewLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
 
-                        int retrievedFinalScore = (int) (long) retrievedLeaderBoardEntry.get( FINAL_SCORE );
-
-                        if( retrievedFinalScore > finalScore ) return;
-
-                        firebaseFirestore.collection( LEADERBOARD )
-                            .document( googleSignInId )
-                            .update( FINAL_SCORE, finalScore )
-                            .addOnSuccessListener( ( Void aVoid ) -> {
-                                Log.wtf( "LEADERBOARD UPDATED", "" );
-                            } ).addOnFailureListener( ( @NonNull Exception e ) -> {
-                                Log.wtf( "LEADERBOARD UPDATE FAILED", e.getLocalizedMessage() );
-                            }
-                        );
-                    } else {
-                        // Create a new entry for the leaderboard.
-                        Map< String, Object > leaderboardEntry = new HashMap<>();
-
-                        leaderboardEntry.put( DISPLAY_NAME, displayName );
-                        leaderboardEntry.put( FINAL_SCORE,  finalScore );
-
-                        firebaseFirestore
-                            .collection( LEADERBOARD )
-                            .document( googleSignInId )
-                            .set( leaderboardEntry )
-                            .addOnSuccessListener( ( Void aVoid ) -> {
-                                Log.wtf( "LEADERBOARD WRITTEN", "" );
-                            } ).addOnFailureListener( ( @NonNull Exception e ) -> {
-                                Log.wtf( "LEADERBOARD WRITE FAILED", e.getLocalizedMessage() );
-                            }
-                        );
-                    }
+                    return;
                 }
-            );
-        } catch( Exception e ) {
-            Log.wtf( "ERROR", e.getLocalizedMessage() );
-        }
+
+                // If it is greater than the final score the user just got, do nothing.
+                if( existingScoreBeatsNewScore( documentSnapshot, finalScore ) ) return;
+
+                // Otherwise, update the leaderboard.
+                updateExisingLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
+            } )
+
+            .addOnFailureListener( ( @NonNull Exception e ) -> {
+                // TODO: Handle Failure Here
+            } );
+    }
+
+    private boolean existingScoreBeatsNewScore( DocumentSnapshot retrievedLeaderBoardEntry, int finalScore ) {
+        // Evil cast the final score on the existing leaderboard entry.
+        int retrievedFinalScore = (int) (long) retrievedLeaderBoardEntry.get( FINAL_SCORE );
+
+        return retrievedFinalScore > finalScore;
+    }
+
+    private void publishNewLeaderboardEntry(
+        FirebaseFirestore firebaseFirestore, String googleSignInId, String displayName, int finalScore
+    ) {
+        // Create a new entry for the leaderboard.
+        Map< String, Object > leaderboardEntry = new HashMap<>();
+
+        leaderboardEntry.put( DISPLAY_NAME, displayName );
+        leaderboardEntry.put( FINAL_SCORE,  finalScore );
+
+        // Write the new entry to the leaderboard.
+        firebaseFirestore
+            .collection( LEADERBOARD )
+            .document( googleSignInId )
+            .set( leaderboardEntry )
+            .addOnSuccessListener( ( Void aVoid ) -> Log.wtf( "LEADERBOARD WRITTEN", "" ) )
+            .addOnFailureListener( ( @NonNull Exception e ) ->  Log.wtf( "LEADERBOARD WRITE FAILED", e.getLocalizedMessage() ) );
+    }
+
+    private void updateExisingLeaderboardEntry(
+        FirebaseFirestore firebaseFirestore, String googleSignInId, String displayName, int finalScore
+    ) {
+        // Otherwise, update the leaderboard.
+        firebaseFirestore
+            .collection( LEADERBOARD )
+            .document( googleSignInId )
+            .update( FINAL_SCORE, finalScore )
+            .addOnSuccessListener( ( Void aVoid ) -> Log.wtf( "LEADERBOARD UPDATED", "" ) )
+            .addOnFailureListener( ( @NonNull Exception e ) -> Log.wtf( "LEADERBOARD UPDATE FAILED", e.getLocalizedMessage() ) );
+    }
+
+    public void getTopLimitLeaders( Context context ) {
+        // Guard against context not being an EchoLeaderboardListener
+        if( !( context instanceof EchoLeaderboardListener ) ) return;
+
+        // Top limit leaders on the leaderboard, if any.
+        Map< String, Integer > topLimitLeaders = new HashMap<>();
+
+        // Initialize Firebase and get the Cloud Firestore instance.
+        FirebaseApp.initializeApp( context );
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+        // Get the top limit leaders, sorted by final score descending.
+        firebaseFirestore
+            .collection( LEADERBOARD )
+            .orderBy( FINAL_SCORE, Query.Direction.DESCENDING )
+            .limit( LIMIT )
+            .get()
+
+            .addOnSuccessListener( ( QuerySnapshot queryDocumentSnapshots ) -> {
+                // Put the top limit leaders in the hash map.
+                for( QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots ) {
+                    topLimitLeaders.put(
+                        queryDocumentSnapshot.getId(),
+                        (int) (long) queryDocumentSnapshot.get( FINAL_SCORE )
+                    );
+                }
+
+                // Notify the caller that the top limit leaders were retrieved.
+                ( (EchoLeaderboardListener) context ).onGotTopLimitleaders( topLimitLeaders );
+            } )
+
+            .addOnFailureListener( ( @NonNull Exception e ) -> {
+                // TODO: Handle Failure Here
+            } );
     }
 }
