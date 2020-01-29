@@ -9,6 +9,7 @@ package edu.fullsail.echo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,8 +44,19 @@ public class GameOverActivity extends Activity {
     }
 
     private void publishScoreToLeaderboard() {
-        if( googleSignInAccount != null )
-            EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore );
+        if( googleSignInAccount != null ) {
+            EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore,
+                () -> {
+                    // TODO: Notify Successful Publication to Leaderboard
+                    Log.wtf( "", "" );
+                },
+
+                ( Exception e ) -> {
+                    // TODO: Notify Unsuccessful Publication to Leaderboard
+                    Log.wtf( "", "" );
+                }
+            );
+        }
     }
 
     private void gameOver() {

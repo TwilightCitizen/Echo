@@ -25,12 +25,12 @@ import java.util.Map;
 
 class EchoLeaderboard {
     // The singleton instance.
-    private static EchoLeaderboard instance = null;
+    private static       EchoLeaderboard instance     = null;
 
     // Leaderboard constants.
-    private static final String            DISPLAY_NAME      = "DISPLAY_NAME";
-    private static final String            FINAL_SCORE       = "FINAL_SCORE";
-    private static final String            LEADERBOARD       = "LEADERBOARD";
+    private static final String          DISPLAY_NAME = "DISPLAY_NAME";
+    private static final String          FINAL_SCORE  = "FINAL_SCORE";
+    private static final String          LEADERBOARD  = "LEADERBOARD";
 
     // Private constructor prevents instantiation.
     private EchoLeaderboard() {}
@@ -51,7 +51,21 @@ class EchoLeaderboard {
         void onFailedTopLimitLeaders( Exception e );
     }
 
-    void publishScoreToLeaderboard( Context context, GoogleSignInAccount googleSignInAccount, int finalScore ) {
+    public interface OnPublishScoreToLeaderBoardListener {
+        void onPublishScoreToLeaderBoard();
+    }
+
+    public interface OnFailedScoreToLeaderBoardListener {
+        void onFailScoreToLeaderBoard( Exception e );
+    }
+
+    void publishScoreToLeaderboard(
+        Context                             context,
+        GoogleSignInAccount                 googleSignInAccount,
+        int                                 finalScore,
+        OnPublishScoreToLeaderBoardListener onPublishScoreToLeaderBoardListener,
+        OnFailedScoreToLeaderBoardListener  onFailedScoreToLeaderBoardListener
+    ) {
         // Guard against publishing the score of a guest user.
         if( googleSignInAccount == null ) return;
 
@@ -75,7 +89,10 @@ class EchoLeaderboard {
             .addOnSuccessListener( ( DocumentSnapshot documentSnapshot ) -> {
                 // Create the leaderboard entry if it does not exist.
                 if( !documentSnapshot.exists() ) {
-                    publishNewLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
+                    publishNewLeaderboardEntry(
+                        firebaseFirestore, googleSignInId, displayName, finalScore,
+                        onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
+                    );
 
                     return;
                 }
@@ -84,12 +101,14 @@ class EchoLeaderboard {
                 if( existingScoreBeatsNewScore( documentSnapshot, finalScore ) ) return;
 
                 // Otherwise, update the leaderboard.
-                updateExistingLeaderboardEntry( firebaseFirestore, googleSignInId, displayName, finalScore );
+                updateExistingLeaderboardEntry(
+                    firebaseFirestore, googleSignInId, finalScore,
+                    onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
+                );
             } )
 
-            .addOnFailureListener( ( @NonNull Exception e ) -> {
-                // TODO: Handle Failure Here
-            } );
+            // Notify the caller of unsuccessful score publication to the leaderboard.
+            .addOnFailureListener( onFailedScoreToLeaderBoardListener::onFailScoreToLeaderBoard );
     }
 
     private boolean existingScoreBeatsNewScore( DocumentSnapshot retrievedLeaderBoardEntry, int finalScore ) {
@@ -100,7 +119,12 @@ class EchoLeaderboard {
     }
 
     private void publishNewLeaderboardEntry(
-        FirebaseFirestore firebaseFirestore, String googleSignInId, String displayName, int finalScore
+        FirebaseFirestore                   firebaseFirestore,
+        String                              googleSignInId,
+        String                              displayName,
+        int                                 finalScore,
+        OnPublishScoreToLeaderBoardListener onPublishScoreToLeaderBoardListener,
+        OnFailedScoreToLeaderBoardListener  onFailedScoreToLeaderBoardListener
     ) {
         // Create a new entry for the leaderboard.
         Map< String, Object > leaderboardEntry = new HashMap<>();
@@ -113,20 +137,34 @@ class EchoLeaderboard {
             .collection( LEADERBOARD )
             .document( googleSignInId )
             .set( leaderboardEntry )
-            .addOnSuccessListener( ( Void aVoid ) -> Log.wtf( "LEADERBOARD WRITTEN", "" ) )
-            .addOnFailureListener( ( @NonNull Exception e ) ->  Log.wtf( "LEADERBOARD WRITE FAILED", e.getLocalizedMessage() ) );
+
+            // Notify the caller of successful score publication to the leaderboard.
+            .addOnSuccessListener( ( Void aVoid ) ->
+                    onPublishScoreToLeaderBoardListener.onPublishScoreToLeaderBoard() )
+
+            // Notify the caller of unsuccessful score publication to the leaderboard.
+            .addOnFailureListener( onFailedScoreToLeaderBoardListener::onFailScoreToLeaderBoard );
     }
 
     private void updateExistingLeaderboardEntry(
-        FirebaseFirestore firebaseFirestore, String googleSignInId, String displayName, int finalScore
+        FirebaseFirestore                   firebaseFirestore,
+        String                              googleSignInId,
+        int                                 finalScore,
+        OnPublishScoreToLeaderBoardListener onPublishScoreToLeaderBoardListener,
+        OnFailedScoreToLeaderBoardListener  onFailedScoreToLeaderBoardListener
     ) {
         // Otherwise, update the leaderboard.
         firebaseFirestore
             .collection( LEADERBOARD )
             .document( googleSignInId )
             .update( FINAL_SCORE, finalScore )
-            .addOnSuccessListener( ( Void aVoid ) -> Log.wtf( "LEADERBOARD UPDATED", "" ) )
-            .addOnFailureListener( ( @NonNull Exception e ) -> Log.wtf( "LEADERBOARD UPDATE FAILED", e.getLocalizedMessage() ) );
+
+            // Notify the caller of successful score publication to the leaderboard.
+            .addOnSuccessListener( ( Void aVoid ) ->
+                    onPublishScoreToLeaderBoardListener.onPublishScoreToLeaderBoard() )
+
+            // Notify the caller of unsuccessful score publication to the leaderboard.
+            .addOnFailureListener( onFailedScoreToLeaderBoardListener::onFailScoreToLeaderBoard );
     }
 
     void getTopLimitLeaders(
@@ -163,6 +201,7 @@ class EchoLeaderboard {
                 onGotTopLimitLeadersListener.onGotTopLimitLeaders( topLimitLeaders );
             } )
 
+            // Notify the caller that the top limit leaders could not be retrieved.
             .addOnFailureListener( onFailedTopLimitLeadersListener::onFailedTopLimitLeaders );
     }
 }

@@ -22,14 +22,14 @@ public class LeaderboardActivity extends WearableActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_leaderboard );
 
-        EchoLeaderboard.getInstance().getTopLimitLeaders(
-            this, 100,
+        EchoLeaderboard.getInstance().getTopLimitLeaders( this, 100,
             ( Map< String, Integer > topLimitLeaders ) -> {
+                // TODO: Display Leaders in Listing
+            },
 
-        },
             ( Exception e ) -> {
-                // TODO: Handle Failure
-                // Looks like caching is preventing failure when offline.  Interdasting...
-        } );
+                // TODO: Notify Unsuccessful Retrieval of Leaders
+            }
+        );
     }
 }
