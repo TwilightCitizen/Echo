@@ -112,7 +112,11 @@ class EchoLeaderboard {
                 }
 
                 // If it is greater than the final score the user just got, do nothing.
-                if( existingScoreBeatsNewScore( documentSnapshot, finalScore ) ) return;
+                if( existingScoreBeatsNewScore( documentSnapshot, finalScore ) ){
+                    onPublishScoreToLeaderBoardListener.onPublishScoreToLeaderBoard();
+
+                    return;
+                }
 
                 // Otherwise, update the leaderboard.
                 updateExistingLeaderboardEntry(

@@ -9,11 +9,10 @@ package edu.fullsail.echo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -44,16 +43,32 @@ public class GameOverActivity extends Activity {
     }
 
     private void publishScoreToLeaderboard() {
+        // Get handles to the publishing message and progress indicator.
+        ProgressBar progressPublishing = findViewById( R.id.progressPublishing );
+        TextView    textPublishing     = findViewById( R.id.textPublishing );
+
         if( googleSignInAccount != null ) {
             EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore,
                 () -> {
-                    // TODO: Notify Successful Publication to Leaderboard
-                    Log.wtf( "", "" );
+                    // Hide the publishing progress.
+                    progressPublishing.setVisibility( View.GONE );
+                    textPublishing.setVisibility( View.GONE );
+
+                    // Show the published progress.
+                    TextView textPublished = findViewById( R.id.textPublished );
+
+                    textPublished.setVisibility( View.VISIBLE );
                 },
 
                 ( Exception e ) -> {
-                    // TODO: Notify Unsuccessful Publication to Leaderboard
-                    Log.wtf( "", "" );
+                    // Hide the publishing progress.
+                    progressPublishing.setVisibility( View.GONE );
+                    textPublishing.setVisibility( View.GONE );
+
+                    // Show the unpublished progress.
+                    TextView textUnpublished = findViewById( R.id.textUnpublished );
+
+                    textUnpublished.setVisibility( View.VISIBLE );
                 }
             );
         }

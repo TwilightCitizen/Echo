@@ -33,4 +33,8 @@
     <string name="title_activity_game_mode">GameModeActivity</string>
     <string name="title_activity_echo_game">EchoGameActivity</string>
     <string name="title_activity_game_over">GameOverActivity</string>
+
+    <string name="publishing">Publishing Online&#8230;</string>
+    <string name="published">Published Online! :)</string>
+    <string name="unpublished">Couldn\'t Publish. :(</string>
 </resources>
