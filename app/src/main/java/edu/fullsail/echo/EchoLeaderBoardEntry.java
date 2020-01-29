@@ -7,13 +7,17 @@ C20200101
 
 package edu.fullsail.echo;
 
+// The supposedly unused entries are required for correctly Firebase functionality.
+@SuppressWarnings( "unused" )
+
+
 public class EchoLeaderBoardEntry {
     private String displayName;
     private int    finalScore;
 
     public EchoLeaderBoardEntry() {}
 
-    public EchoLeaderBoardEntry( String displayName, int finalScore ) {
+    EchoLeaderBoardEntry( String displayName, int finalScore ) {
         this.displayName = displayName;
         this.finalScore  = finalScore;
     }

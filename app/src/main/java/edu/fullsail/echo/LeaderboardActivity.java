@@ -9,6 +9,7 @@ package edu.fullsail.echo;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -25,10 +26,12 @@ public class LeaderboardActivity extends WearableActivity {
         EchoLeaderboard.getInstance().getTopLimitLeaders( this, 100,
             ( ArrayList< EchoLeaderBoardEntry > topLimitLeaders ) -> {
                 // TODO: Display Leaders in Listing
+                Log.wtf( "", "" );
             },
 
             ( Exception e ) -> {
                 // TODO: Notify Unsuccessful Retrieval of Leaders
+                Log.wtf( "", "" );
             }
         );
     }

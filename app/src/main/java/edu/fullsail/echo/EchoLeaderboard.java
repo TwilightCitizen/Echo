@@ -9,8 +9,14 @@ package edu.fullsail.echo;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -24,7 +30,7 @@ class EchoLeaderboard {
     private static       EchoLeaderboard instance     = null;
 
     // Leaderboard constants.
-    private static final String          DISPLAY_NAME = "displayName";
+    // private static final String          DISPLAY_NAME = "displayName";
     private static final String          FINAL_SCORE  = "finalScore";
     private static final String          LEADERBOARD  = "leaderboard";
 
@@ -78,7 +84,8 @@ class EchoLeaderboard {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Get any leaderboard entry for the signed in user.
-        firebaseFirestore.collection( LEADERBOARD )
+        firebaseFirestore
+            .collection( LEADERBOARD )
             .document( googleSignInId )
             .get()
 
@@ -86,8 +93,8 @@ class EchoLeaderboard {
                 // Create the leaderboard entry if it does not exist.
                 if( !documentSnapshot.exists() ) {
                     publishNewLeaderboardEntry(
-                        firebaseFirestore, googleSignInId, displayName, finalScore,
-                        onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
+                            firebaseFirestore, googleSignInId, displayName, finalScore,
+                            onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
                     );
 
                     return;
@@ -98,8 +105,8 @@ class EchoLeaderboard {
 
                 // Otherwise, update the leaderboard.
                 updateExistingLeaderboardEntry(
-                    firebaseFirestore, googleSignInId, finalScore,
-                    onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
+                        firebaseFirestore, googleSignInId, finalScore,
+                        onPublishScoreToLeaderBoardListener, onFailedScoreToLeaderBoardListener
                 );
             } )
 
@@ -147,11 +154,7 @@ class EchoLeaderboard {
         OnFailedScoreToLeaderBoardListener  onFailedScoreToLeaderBoardListener
     ) {
         // Otherwise, update the leaderboard.
-        firebaseFirestore
-            .collection( LEADERBOARD )
-            .document( googleSignInId )
-            .update( FINAL_SCORE, finalScore )
-
+        firebaseFirestore.collection( LEADERBOARD ).document( googleSignInId ).update( FINAL_SCORE, finalScore )
             // Notify the caller of successful score publication to the leaderboard.
             .addOnSuccessListener( ( Void aVoid ) ->
                     onPublishScoreToLeaderBoardListener.onPublishScoreToLeaderBoard() )
@@ -159,6 +162,9 @@ class EchoLeaderboard {
             // Notify the caller of unsuccessful score publication to the leaderboard.
             .addOnFailureListener( onFailedScoreToLeaderBoardListener::onFailScoreToLeaderBoard );
     }
+
+    // It is more flexible to allow the caller to specify this, even if there is only one caller.
+    @SuppressWarnings( "SameParameterValue" )
 
     void getTopLimitLeaders(
         Context                         context,
@@ -175,11 +181,9 @@ class EchoLeaderboard {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Get the top limit leaders, sorted by final score descending.
-        firebaseFirestore
-            .collection( LEADERBOARD )
+        firebaseFirestore.collection( LEADERBOARD )
             .orderBy( FINAL_SCORE, Query.Direction.DESCENDING )
-            .limit( limit )
-            .get()
+            .limit( limit ).get()
 
             .addOnSuccessListener( ( QuerySnapshot queryDocumentSnapshots ) -> {
                 // Put the top limit leaders in the list.
