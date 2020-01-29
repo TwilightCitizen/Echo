@@ -10,7 +10,7 @@ package edu.fullsail.echo;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /*
 Leaderboard activity will show players' top scores, sorted from highest to lowest score, to be
@@ -23,7 +23,7 @@ public class LeaderboardActivity extends WearableActivity {
         setContentView( R.layout.activity_leaderboard );
 
         EchoLeaderboard.getInstance().getTopLimitLeaders( this, 100,
-            ( Map< String, Integer > topLimitLeaders ) -> {
+            ( ArrayList< EchoLeaderBoardEntry > topLimitLeaders ) -> {
                 // TODO: Display Leaders in Listing
             },
 

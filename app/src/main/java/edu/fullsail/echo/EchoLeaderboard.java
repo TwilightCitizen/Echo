@@ -8,9 +8,6 @@ C20200101
 package edu.fullsail.echo;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.FirebaseApp;
@@ -20,17 +17,16 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 class EchoLeaderboard {
     // The singleton instance.
     private static       EchoLeaderboard instance     = null;
 
     // Leaderboard constants.
-    private static final String          DISPLAY_NAME = "DISPLAY_NAME";
-    private static final String          FINAL_SCORE  = "FINAL_SCORE";
-    private static final String          LEADERBOARD  = "LEADERBOARD";
+    private static final String          DISPLAY_NAME = "displayName";
+    private static final String          FINAL_SCORE  = "finalScore";
+    private static final String          LEADERBOARD  = "leaderboard";
 
     // Private constructor prevents instantiation.
     private EchoLeaderboard() {}
@@ -44,7 +40,7 @@ class EchoLeaderboard {
     }
 
     public interface OnGotTopLimitLeadersListener {
-        void onGotTopLimitLeaders( Map< String, Integer > topLimitLeaders );
+        void onGotTopLimitLeaders( ArrayList< EchoLeaderBoardEntry > topLimitLeaders );
     }
 
     public interface OnFailedTopLimitLeadersListener {
@@ -127,16 +123,13 @@ class EchoLeaderboard {
         OnFailedScoreToLeaderBoardListener  onFailedScoreToLeaderBoardListener
     ) {
         // Create a new entry for the leaderboard.
-        Map< String, Object > leaderboardEntry = new HashMap<>();
-
-        leaderboardEntry.put( DISPLAY_NAME, displayName );
-        leaderboardEntry.put( FINAL_SCORE,  finalScore );
+       EchoLeaderBoardEntry echoLeaderBoardEntry = new EchoLeaderBoardEntry( displayName, finalScore );
 
         // Write the new entry to the leaderboard.
         firebaseFirestore
             .collection( LEADERBOARD )
             .document( googleSignInId )
-            .set( leaderboardEntry )
+            .set( echoLeaderBoardEntry )
 
             // Notify the caller of successful score publication to the leaderboard.
             .addOnSuccessListener( ( Void aVoid ) ->
@@ -174,7 +167,7 @@ class EchoLeaderboard {
         OnFailedTopLimitLeadersListener onFailedTopLimitLeadersListener
     ) {
         // Top limit leaders on the leaderboard, if any.
-        Map< String, Integer > topLimitLeaders = new HashMap<>();
+        ArrayList< EchoLeaderBoardEntry > topLimitLeaders = new ArrayList<>();
 
         // Initialize Firebase and get the Cloud Firestore instance.
         FirebaseApp.initializeApp( context );
@@ -189,12 +182,9 @@ class EchoLeaderboard {
             .get()
 
             .addOnSuccessListener( ( QuerySnapshot queryDocumentSnapshots ) -> {
-                // Put the top limit leaders in the hash map.
+                // Put the top limit leaders in the list.
                 for( QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots ) {
-                    topLimitLeaders.put(
-                        queryDocumentSnapshot.getId(),
-                        (int) (long) queryDocumentSnapshot.get( FINAL_SCORE )
-                    );
+                    topLimitLeaders.add( queryDocumentSnapshot.toObject( EchoLeaderBoardEntry.class ) );
                 }
 
                 // Notify the caller that the top limit leaders were retrieved.
