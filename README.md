@@ -59,10 +59,10 @@ Obtaining the SHA-1 hash proved difficult according to the provided instructions
     - 99.9% Complete
     - Hear Only is seriously difficult!  I can hardly get 1 or 2 correct.
 - Guest Game Play or Authenticated Game Play with Score Persistence to Leaderboard
-    - 35% Complete
-    - Google Sign In works though nothing is presently done with the credentials.
-    - Guest Game Play works great.  Full functionality here.
-    - Score Persistent to Leaderboard is next major lift.
+    - 75% Complete
+    - Authenticated Game Play Records New Entries to or Updates Existing Entries on Leaderboard.
+    - Retrieving Top XXX Leaders from Leaderboard Works.
+    - Next Major Lift is Displaying Retrieved Leaders.
 - Intelligent Pause, Resume, and/or Reset Based on Time Spent in Orientation
     - 99.9% Complete
     - Players have no more than 3 seconds between taps before Echo call's game over.
