@@ -9,16 +9,11 @@ package edu.fullsail.echo;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,6 +40,7 @@ class EchoLeaderboard {
         return instance;
     }
 
+    // Inter-class communication interfaces.
     public interface OnGotTopLimitLeadersListener {
         void onGotTopLimitLeaders( ArrayList< EchoLeaderBoardEntry > topLimitLeaders );
     }
@@ -59,6 +55,23 @@ class EchoLeaderboard {
 
     public interface OnFailedScoreToLeaderBoardListener {
         void onFailScoreToLeaderBoard( Exception e );
+    }
+
+    private FirebaseFirestore getConfiguredFirestoreInstance( Context context ) {
+        // Initialize Firebase.
+        FirebaseApp.initializeApp( context );
+
+        // Get the Firestore instance.
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+        // Configure the instance without persistence
+        FirebaseFirestoreSettings firebaseFirestoreSettings = new FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled( false )
+            .build();
+
+        firebaseFirestore.setFirestoreSettings( firebaseFirestoreSettings );
+
+        return firebaseFirestore;
     }
 
     void publishScoreToLeaderboard(
@@ -78,10 +91,8 @@ class EchoLeaderboard {
         // Guard against no Google Sign In account ID.
         if( googleSignInId == null ) return;
 
-        // Initialize Firebase and get the Cloud Firestore instance.
-        FirebaseApp.initializeApp( context );
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        // Get an initialized, configured Firestore instance.
+        FirebaseFirestore firebaseFirestore = getConfiguredFirestoreInstance( context );
 
         // Get any leaderboard entry for the signed in user.
         firebaseFirestore
@@ -175,10 +186,8 @@ class EchoLeaderboard {
         // Top limit leaders on the leaderboard, if any.
         ArrayList< EchoLeaderBoardEntry > topLimitLeaders = new ArrayList<>();
 
-        // Initialize Firebase and get the Cloud Firestore instance.
-        FirebaseApp.initializeApp( context );
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        // Get an initialized, configured Firestore instance.
+        FirebaseFirestore firebaseFirestore = getConfiguredFirestoreInstance( context );
 
         // Get the top limit leaders, sorted by final score descending.
         firebaseFirestore.collection( LEADERBOARD )
@@ -196,6 +205,8 @@ class EchoLeaderboard {
             } )
 
             // Notify the caller that the top limit leaders could not be retrieved.
+            // This almost certainly will never get called.  Instead, the success listener
+            // will provide an empty query.
             .addOnFailureListener( onFailedTopLimitLeadersListener::onFailedTopLimitLeaders );
     }
 }
