@@ -16,6 +16,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+/*
+Game Over activity reports the game's end to the player, notifying the player of the final score.
+Publication of the player's final score to the leaderboard is attempted when the user authenticated
+with Google Sign In, and the status of this operation is reported to the player.
+*/
 public class GameOverActivity extends Activity {
     // Final score for the user.
     private int finalScore;

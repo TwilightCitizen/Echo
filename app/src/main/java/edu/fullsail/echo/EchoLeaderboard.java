@@ -20,6 +20,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/*
+Echo Leaderboard abstracts the publication and retrieval of player scores to and from a Firebase
+Cloud Firestore.  It methods accept callbacks that conform to event interfaces for reporting the
+success or failure of these transactions so that callers can act accordingly.
+*/
 class EchoLeaderboard {
     // The singleton instance.
     private static       EchoLeaderboard instance     = null;

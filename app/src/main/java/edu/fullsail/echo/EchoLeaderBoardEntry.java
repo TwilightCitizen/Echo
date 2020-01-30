@@ -10,7 +10,10 @@ package edu.fullsail.echo;
 // The supposedly unused entries are required for correctly Firebase functionality.
 @SuppressWarnings( "unused" )
 
-
+/*
+Echo Leaderboard Entry encapsulates the data for an entry on the Firebase Cloud Firestore
+leaderboard more conveniently that Maps or Dictionaries of values.
+*/
 public class EchoLeaderBoardEntry {
     private String displayName;
     private int    finalScore;
