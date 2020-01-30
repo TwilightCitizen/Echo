@@ -37,4 +37,7 @@
     <string name="publishing">Publishing Online&#8230;</string>
     <string name="published">Published Online! :)</string>
     <string name="unpublished">Couldn\'t Publish. :(</string>
+
+    <string name="retrieving_top_100">Retreiving Top 100&#8230;</string>
+    <string name="no_leaders">No leaders here.\n\nMaybe check your Internet?</string>
 </resources>
