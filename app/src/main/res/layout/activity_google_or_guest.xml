@@ -54,7 +54,6 @@
             android:contentDescription="@string/icon_use_guest_account" />
 
         <TextView
-            android:id="@+id/textViewLeaderboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top"
