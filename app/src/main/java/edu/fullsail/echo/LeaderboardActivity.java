@@ -27,8 +27,11 @@ obtained by a Firebase database.  Presently, functionality just displays an empt
 navigation could be stubbed out.
 */
 public class LeaderboardActivity extends WearableActivity {
+    // RecyclerView Adapter for a Leaderboard entry, using a Leaderboard entry ViewHolder.
     private class LeaderAdapter extends RecyclerView.Adapter< LeaderAdapter.LeaderViewHolder > {
+        // ViewHolder for a leaderboard entry.
         class LeaderViewHolder extends RecyclerView.ViewHolder {
+            // Leader's score and name.
             TextView textLeaderScore;
             TextView textLeaderName;
 
@@ -40,20 +43,34 @@ public class LeaderboardActivity extends WearableActivity {
             }
         }
 
+        // Leaderboard entries to be adapted for view.
         private ArrayList< EchoLeaderBoardEntry > echoLeaderBoardEntries;
 
         LeaderAdapter( ArrayList< EchoLeaderBoardEntry > leaderBoardEntries ) {
             this.echoLeaderBoardEntries = leaderBoardEntries;
         }
 
+        @Override public int getItemViewType( int position ) {
+            // View type is determined by placement or position.
+            return position;
+        }
+
         @NonNull @Override public LeaderViewHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType ) {
+            // Inflate and return leaderboard item according to placement.
+            int layoutItemLeaderboard =
+                    viewType == 0 ? R.layout.item_leaderboard_first  :
+                    viewType == 1 ? R.layout.item_leaderboard_second :
+                    viewType == 2 ? R.layout.item_leaderboard_third  :
+                                    R.layout.item_leaderboard_rest;
+
             View leaderboardItem = LayoutInflater
-                .from( parent.getContext() ).inflate( R.layout.item_leaderboard, parent, false );
+                .from( parent.getContext() ).inflate( layoutItemLeaderboard, parent, false );
 
             return new LeaderViewHolder( leaderboardItem );
         }
 
         @Override public void onBindViewHolder( @NonNull LeaderViewHolder holder, int position ) {
+            // All leaderboard items can be bound with the same view holder.
             EchoLeaderBoardEntry echoLeaderBoardEntry = echoLeaderBoardEntries.get( position );
 
             holder.textLeaderScore.setText( String.valueOf( echoLeaderBoardEntry.getFinalScore() ) );
@@ -110,6 +127,4 @@ public class LeaderboardActivity extends WearableActivity {
             }
         );
     }
-
-
 }
