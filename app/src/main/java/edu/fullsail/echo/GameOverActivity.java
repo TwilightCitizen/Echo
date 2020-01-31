@@ -52,31 +52,39 @@ public class GameOverActivity extends Activity {
         ProgressBar progressPublishing = findViewById( R.id.progressPublishing );
         TextView    textPublishing     = findViewById( R.id.textPublishing );
 
-        if( googleSignInAccount != null ) {
-            EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore,
-                () -> {
-                    // Hide the publishing progress.
-                    progressPublishing.setVisibility( View.GONE );
-                    textPublishing.setVisibility( View.GONE );
+        // Guard against publishing guest account score to leaderboard.
+        if( googleSignInAccount == null ) {
+            // Hide the publishing progress.
+            progressPublishing.setVisibility( View.GONE );
+            textPublishing.setVisibility( View.GONE );
 
-                    // Show the published progress.
-                    TextView textPublished = findViewById( R.id.textPublished );
-
-                    textPublished.setVisibility( View.VISIBLE );
-                },
-
-                ( Exception e ) -> {
-                    // Hide the publishing progress.
-                    progressPublishing.setVisibility( View.GONE );
-                    textPublishing.setVisibility( View.GONE );
-
-                    // Show the unpublished progress.
-                    TextView textUnpublished = findViewById( R.id.textUnpublished );
-
-                    textUnpublished.setVisibility( View.VISIBLE );
-                }
-            );
+            return;
         }
+
+        // Otherwise, attempt to publish final score to leaderboard.
+        EchoLeaderboard.getInstance().publishScoreToLeaderboard( this, googleSignInAccount, finalScore,
+            () -> {
+                // Hide the publishing progress.
+                progressPublishing.setVisibility( View.GONE );
+                textPublishing.setVisibility( View.GONE );
+
+                // Show the published progress.
+                TextView textPublished = findViewById( R.id.textPublished );
+
+                textPublished.setVisibility( View.VISIBLE );
+            },
+
+            ( Exception e ) -> {
+                // Hide the publishing progress.
+                progressPublishing.setVisibility( View.GONE );
+                textPublishing.setVisibility( View.GONE );
+
+                // Show the unpublished progress.
+                TextView textUnpublished = findViewById( R.id.textUnpublished );
+
+                textUnpublished.setVisibility( View.VISIBLE );
+            }
+        );
     }
 
     private void gameOver() {
