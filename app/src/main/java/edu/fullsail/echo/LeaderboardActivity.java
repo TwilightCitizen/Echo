@@ -32,8 +32,8 @@ public class LeaderboardActivity extends WearableActivity {
         // ViewHolder for a leaderboard entry.
         class LeaderViewHolder extends RecyclerView.ViewHolder {
             // Leader's score and name.
-            TextView textLeaderScore;
-            TextView textLeaderName;
+            final TextView textLeaderScore;
+            final TextView textLeaderName;
 
             LeaderViewHolder( @NonNull View itemView ) {
                 super( itemView );
@@ -44,7 +44,7 @@ public class LeaderboardActivity extends WearableActivity {
         }
 
         // Leaderboard entries to be adapted for view.
-        private ArrayList< EchoLeaderBoardEntry > echoLeaderBoardEntries;
+        private final ArrayList< EchoLeaderBoardEntry > echoLeaderBoardEntries;
 
         LeaderAdapter( ArrayList< EchoLeaderBoardEntry > leaderBoardEntries ) {
             this.echoLeaderBoardEntries = leaderBoardEntries;
