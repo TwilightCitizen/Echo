@@ -55,19 +55,11 @@ Obtaining the SHA-1 hash proved difficult according to the provided instructions
 
 ## Status of Key Features
 
-- Memory Game with 3 Modes of Play (See & Hear, See Only, and Hear Only)
-    - 99.9% Complete
-    - Hear Only is seriously difficult!  I can hardly get 1 or 2 correct.
-- Guest Game Play or Authenticated Game Play with Score Persistence to Leaderboard
-    - 90% Complete
-    - Authenticated Game Play Records New Entries to or Updates Existing Entries on Leaderboard.
-    - Retrieving Top XXX Leaders from Leaderboard Works.
-    - Displaying Retrieved Leaders Works.
-    - Just Needs Refactoring and Finesse.
-- Intelligent Pause, Resume, and/or Reset Based on Time Spent in Orientation
-    - 99.9% Complete
-    - Players have no more than 3 seconds between taps before Echo call's game over.
-    - No need for Ambient Mode.
+- Memory Game with 3 Modes of Play (See & Hear, See Only, and Hear Only): **Complete**
+- Guest Game Play or Authenticated Game Play with Score Persistence to Leaderboard: **Complete**
+- Intelligent Pause, Resume, and/or Reset Based on Time Spent in Orientation: **Complete**
     
 ## Known Issues and Bugs
-- The yellow back button that appears after game over appears beneath the bad button tap overlay.  Nothing seems to work to fix this.  Changes in elevation, order of declaration in the layout, or even calling sendToFront in code do nothing.  It still works, but it looks off.
+
+- None Known
+- Probably Some
