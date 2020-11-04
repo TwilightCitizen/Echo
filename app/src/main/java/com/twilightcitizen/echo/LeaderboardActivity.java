@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
@@ -26,11 +26,12 @@ Leaderboard activity will show players' top scores, sorted from highest to lowes
 obtained by a Firebase database.  Presently, functionality just displays an empty activity so
 navigation could be stubbed out.
 */
+@SuppressWarnings("deprecation")
 public class LeaderboardActivity extends WearableActivity {
     // RecyclerView Adapter for a Leaderboard entry, using a Leaderboard entry ViewHolder.
-    private class LeaderAdapter extends RecyclerView.Adapter< LeaderAdapter.LeaderViewHolder > {
+    private static class LeaderAdapter extends RecyclerView.Adapter< LeaderAdapter.LeaderViewHolder > {
         // ViewHolder for a leaderboard entry.
-        class LeaderViewHolder extends RecyclerView.ViewHolder {
+        static class LeaderViewHolder extends RecyclerView.ViewHolder {
             // Leader's score and name.
             final TextView textLeaderScore;
             final TextView textLeaderName;
@@ -66,7 +67,7 @@ public class LeaderboardActivity extends WearableActivity {
             View leaderboardItem = LayoutInflater
                 .from( parent.getContext() ).inflate( layoutItemLeaderboard, parent, false );
 
-            return new LeaderViewHolder( leaderboardItem );
+            return new LeaderViewHolder(leaderboardItem);
         }
 
         @Override public void onBindViewHolder( @NonNull LeaderViewHolder holder, int position ) {
@@ -108,7 +109,7 @@ public class LeaderboardActivity extends WearableActivity {
 
                 RecyclerView               recycleLeaders = findViewById( R.id.recycleLeaders );
                 RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager( this );
-                RecyclerView.Adapter       adapterLeaders = new LeaderAdapter( topLimitLeaders );
+                @SuppressWarnings("rawtypes") RecyclerView.Adapter       adapterLeaders = new LeaderAdapter(topLimitLeaders);
 
                 recycleLeaders.setHasFixedSize( true );
                 recycleLeaders.setLayoutManager( layoutManager );

@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.app.Activity;
 import android.os.Bundle;

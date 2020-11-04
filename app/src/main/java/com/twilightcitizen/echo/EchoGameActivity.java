@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -22,6 +22,7 @@ Echo Game activity creates an Echo Game instance with the configuration options 
 activity and starts the game.  It sets itself as Echo Game's delegate/listener and responds to
 Echo Game events, also sending buttons taps to Echo Game when they occur.
 */
+@SuppressWarnings("deprecation")
 public class EchoGameActivity extends WearableActivity implements EchoGame.EchoGameListener {
     // Tags for passing the final score to the Game Over activity.
     public static final String  FINAL_SCORE         = "FINAL_SCORE";

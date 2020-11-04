@@ -1,13 +1,13 @@
 apply plugin : 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "edu.fullsail.echo"
+        applicationId "com.twilightcitizen.echo"
         minSdkVersion 26
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -27,17 +27,17 @@ android {
 
 dependencies {
     implementation fileTree( dir : 'libs', include : [ '*.jar' ] )
-    implementation 'com.google.android.support:wearable:2.5.0'
+    implementation 'com.google.android.support:wearable:2.8.1'
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.3.1'
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.firebase:firebase-auth:20.0.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.wear:wear:1.0.0'
-    compileOnly    'com.google.android.wearable:wearable:2.5.0'
+    implementation 'androidx.wear:wear:1.1.0'
+    compileOnly    'com.google.android.wearable:wearable:2.8.1'
 }
 
 apply plugin : 'com.google.gms.google-services'

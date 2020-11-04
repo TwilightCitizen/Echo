@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.widget.Button;
 Game or Leaderboard activity presents binary navigation actions to the user for the Google or Guest
 activity or the Leaderboard activity.
 */
+@SuppressWarnings("deprecation")
 public class GameOrLeaderboardActivity extends WearableActivity {
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );

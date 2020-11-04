@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ Options are selectable via custom toggle buttons, both defaulting to true.  A si
 button takes the user to the Echo Game activity, which receives any Google Account passed to this
 activity along with the configured options.
 */
+@SuppressWarnings("deprecation")
 public class GameOptionsActivity extends WearableActivity {
     // Tags for passing the game options to the Echo Game activity.
     public static final String       FLASH_BUTTONS = "FLASH_BUTTONS";

@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +33,7 @@ work, the user must first transfer their valid Google account(s) from a phone sy
 using the Wear app on the phone.  Google Account selection notifies the user upon success or failure,
 and upon failure, navigation to the Game Mode activity is halted.
 */
+@SuppressWarnings("deprecation")
 public class GoogleOrGuestActivity extends WearableActivity {
     // Google Sign In request code.
     private static final int    REQUEST_GOOGLE_SIGN_IN = 10;

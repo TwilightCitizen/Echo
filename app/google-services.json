@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "40608778201",
-    "firebase_url": "https://echo-1579483358636.firebaseio.com",
-    "project_id": "echo-1579483358636",
-    "storage_bucket": "echo-1579483358636.appspot.com"
+    "project_number": "336129071146",
+    "firebase_url": "https://echo-f5280.firebaseio.com",
+    "project_id": "echo-f5280",
+    "storage_bucket": "echo-f5280.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:40608778201:android:5d1478f5ec2f6dd0bafbc8",
+        "mobilesdk_app_id": "1:336129071146:android:74d465986bf81d548ccb53",
         "android_client_info": {
-          "package_name": "edu.fullsail.echo"
+          "package_name": "com.twilightcitizen.echo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "40608778201-hqb7q04prufhra81ks2nhnnm6j7ff6gn.apps.googleusercontent.com",
+          "client_id": "336129071146-1j5p5d4c7g4r39fgt88o73fgcr9ie5m3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "edu.fullsail.echo",
-            "certificate_hash": "c5883d8748722c8b420b946b084e6eedeeaeb707"
+            "package_name": "com.twilightcitizen.echo",
+            "certificate_hash": "07ef1ca74a49206c515f4dbd9af9d40b55d4517c"
           }
         },
         {
-          "client_id": "40608778201-3m0fm52l3cbhj6hmaf281i04f9uabrgs.apps.googleusercontent.com",
+          "client_id": "336129071146-j56n9798rlg4v7cs2o6fi8ampul3lqa5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCTe5yYa9Ovh-qZNcqdRynp386H3vV0CGs"
+          "current_key": "AIzaSyCtO0syZVaTGwDm97pwd3z6lQNtiHv6enc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "40608778201-3m0fm52l3cbhj6hmaf281i04f9uabrgs.apps.googleusercontent.com",
+              "client_id": "336129071146-j56n9798rlg4v7cs2o6fi8ampul3lqa5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

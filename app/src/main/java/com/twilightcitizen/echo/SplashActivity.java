@@ -5,7 +5,7 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ Splash activity displays a splash screen for the user, featuring the Echo logo, 
 the Game or Leaderboard activity after a configurable delay.  The Splash activity cannot be
 returned to by the user via back navigation after transition.
 */
+@SuppressWarnings("deprecation")
 public class SplashActivity extends WearableActivity {
     @Override protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );

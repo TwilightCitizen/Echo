@@ -5,10 +5,9 @@ MDV359-O
 C20200101
 */
 
-package edu.fullsail.echo;
+package com.twilightcitizen.echo;
 
 // The supposedly unused entries are required for correctly Firebase functionality.
-@SuppressWarnings( "unused" )
 
 /*
 Echo Leaderboard Entry encapsulates the data for an entry on the Firebase Cloud Firestore
